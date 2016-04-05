@@ -6,24 +6,6 @@ import Superagent from 'superagent';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import Snackbar from 'material-ui/lib/snackbar';
 
-const style = {
-  marginLeft: 20,
-};
-
-const formOuterStyle = {
-  width:"60%",
-  float:"left",
-};
-
-const infoOuterStyle = {
-  width:"40%",
-  marginLeft: 20,
-};
-
-const infoInnerStyle = {
-  marginLeft: 20,
-};
-
 let country="";
 let subject="";
 let area="";
@@ -32,6 +14,7 @@ let street="";
 let building="";
 let appartment="";
 let zipCode="";
+let phone="";
 
 let valid = false;
 
@@ -44,6 +27,8 @@ const RegisterAddressForm = React.createClass({
       buildingErrorMessageText: "",
       appartmentErrorMessageText: "",
       zipCodeErrorMessageText: "",
+      phoneErrorMessageText: "",
+      submitDisable: false,
     };
   },
 
@@ -102,6 +87,15 @@ const RegisterAddressForm = React.createClass({
       this.setState({zipCodeErrorMessageText:""});
     }
 
+    if (isNull(phone)) {
+      valid = false;
+      this.setState({phoneErrorMessageText:"Обязательно заполнить"});
+      return;
+    } else {
+      valid = true;
+      this.setState({phoneErrorMessageText:""});
+    }
+
     //Just to have ESLint shut use someway
     if (!isNull(subject)||!isNull(area)) {
       console.log("Bazinga!");
@@ -109,7 +103,7 @@ const RegisterAddressForm = React.createClass({
 
     if (valid) {
       const self = this;
-      this.setState({sending:true});
+      this.setState({sending:true, submitDisable:true});
       Superagent.post('/api/v1/address/')
         .field('idDeclarant', sessionStorage.getItem('idDeclarant'))
         .field('country',country)
@@ -120,13 +114,15 @@ const RegisterAddressForm = React.createClass({
         .field('building',building)
         .field('appartment',appartment)
         .field('zipCode',zipCode)
+        .field('phone',phone)
         .set('Accept','application/json')
         .end(function(err, res) {
           if (res && res.body && res.body.success) {
             console.log(res.body.success);
+            self.setState({open:true, message:'Мы сохранили Ваш aдрес!', sending:false});
           } else {
             console.log(err);
-            self.setState({open:true, error:'Ой! Ошибка.'});
+            self.setState({open:true, message:'Ой! Ошибка.'});
           }
         });
     } else {
@@ -166,6 +162,10 @@ const RegisterAddressForm = React.createClass({
     zipCode = event.target.value;
   },
 
+  handlePhoneChange: function(event) {
+    phone = event.target.value;
+  },
+
   handleRequestClose : function() {
     this.setState({
       open: false,
@@ -175,7 +175,7 @@ const RegisterAddressForm = React.createClass({
   render: function() {
     return (
       <div>
-        <div style={formOuterStyle}>
+        <div className="col tough span_1_of_2">
           <h2>Регистрация почтового адреса< /h2>
           <TextField
             onChange={this.handleCountryChange}
@@ -227,29 +227,35 @@ const RegisterAddressForm = React.createClass({
             floatingLabelText="Индекс"
           / >
           <br / >
+          <TextField
+            onChange={this.handlePhoneChange}
+            errorText={this.state.phoneErrorMessageText}
+            floatingLabelText="Телефон"
+          / >
           <br / >
-          {this.state.sending ?
-            <div>
-              <CircularProgress />
-            </ div> :
-            <FlatButton
-              label="Зарегистрировать"
-              secondary={true}
-              onMouseDown={this.handleSubmit}
-              style={style}
-            / >}
-          {this.state.open ?
-            <Snackbar
-              open={this.state.open}
-              message={this.state.error}
-              action="Ok"
-              autoHideDuration={5000}
-              onRequestClose={this.handleRequestClose}
-            /> : null}
+          <br / >
+        {this.state.sending ?
+          <div>
+            <CircularProgress />
+          </ div> :
+          <FlatButton
+            label="Зарегистрировать"
+            secondary={true}
+            onMouseDown={this.handleSubmit}
+            disabled={this.submitDisable}
+          / >}
+        {this.state.open ?
+          <Snackbar
+            open={this.state.open}
+            message={this.state.message}
+            action="Ok"
+            autoHideDuration={5000}
+            onRequestClose={this.handleRequestClose}
+          /> : null}
         < /div>
-        <div style={infoOuterStyle}>
-          <div style={infoInnerStyle}>
-          </ div>
+        <div className="info-block col tough span_2_of_2">
+          Регистрация почтового адреса на данном этапе не обязательна,
+          но адрес может понадобиться нам для рассылки призов.
         < /div>
       < /div>
       );

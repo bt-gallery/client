@@ -3,7 +3,7 @@ import TextField from 'material-ui/lib/text-field';
 import FlatButton from 'material-ui/lib/flat-button';
 import isEmail from 'validator/lib/isEmail';
 import isNull from 'validator/lib/isNull';
-import {browserHistory} from 'react-router';
+import {browserHistory, Link} from 'react-router';
 import Superagent from 'superagent';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -86,7 +86,7 @@ const RegisterDeclarantForm = React.createClass({
           if (res && res.body && res.body.success
             && res.body.success.idDeclarant ) {
             sessionStorage.setItem('idDeclarant', res.body.success.idDeclarant);
-            browserHistory.push("/address");
+            browserHistory.push("/participant");
           } else {
             self.setState({open:true, error:'Ой! Ошибка.'});
           }
@@ -121,54 +121,67 @@ const RegisterDeclarantForm = React.createClass({
   render : function() {
     return (
       <div>
-        <h2>Регистрация заявителя< /h2>
-        <TextField
-          floatingLabelText="Электронная почта"
-          errorText={this.state.emailErrorMessageText}
-          onChange={this.handleEmailChange}
-          style={style}
-        / >
-        <br / >
-        <TextField
-          floatingLabelText="Имя заявителя"
-          errorText={this.state.nameErrorMessageText}
-          onChange={this.handleNameChange}
-          style={style}
-        / >
-        <br / >
-        <TextField
-          floatingLabelText="Отчество"
-          errorText={this.state.patronymicErrorMessageText}
-          onChange={this.handlePatronymicChange}
-          style={style}
-        / >
-        <br / >
-        <TextField
-          floatingLabelText="Фамилия"
-          errorText={this.state.surnameErrorMessageText}
-          onChange={this.handleSurnameChange}
-          style={style}
-        / >
-        <br / >
-        <br / >
-        {this.state.sending ?
-          <div>
-            <CircularProgress />
-          </ div> :
-          <FlatButton
-            label="Далее"
-            secondary={true}
-            onMouseDown={this.handleSubmit}
+        <div className="col tough span_1_of_2">
+          <h2>Регистрация заявителя< /h2>
+          <TextField
+            floatingLabelText="Электронная почта"
+            errorText={this.state.emailErrorMessageText}
+            onChange={this.handleEmailChange}
             style={style}
-          / >}
-        {this.state.open ?
-          <Snackbar
-            open={this.state.open}
-            message={this.state.error}
-            action="Ok"
-            autoHideDuration={5000}
-            onRequestClose={this.handleRequestClose}
-          /> : null}
+          / >
+          <br / >
+          <TextField
+            floatingLabelText="Имя заявителя"
+            errorText={this.state.nameErrorMessageText}
+            onChange={this.handleNameChange}
+            style={style}
+          / >
+          <br / >
+          <TextField
+            floatingLabelText="Отчество"
+            errorText={this.state.patronymicErrorMessageText}
+            onChange={this.handlePatronymicChange}
+            style={style}
+          / >
+          <br / >
+          <TextField
+            floatingLabelText="Фамилия"
+            errorText={this.state.surnameErrorMessageText}
+            onChange={this.handleSurnameChange}
+            style={style}
+          / >
+          <br / >
+          <br / >
+          {this.state.sending ?
+            <div>
+              <CircularProgress />
+            </ div> :
+            <FlatButton
+              label="Далее"
+              secondary={true}
+              onMouseDown={this.handleSubmit}
+              style={style}
+            / >}
+          {this.state.open ?
+            <Snackbar
+              open={this.state.open}
+              message={this.state.error}
+              action="Ok"
+              autoHideDuration={5000}
+              onRequestClose={this.handleRequestClose}
+            /> : null}
+        < /div>
+        <div className="col tough span_2_of_2 info-block">
+          Заявитель, тот кто подает заявку на участие ребенка или группы ребят в конкурсе.
+          <div style={{margin:50}}>
+            <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
+              Как заполнять заявку
+            < /a>
+            <br />
+            <br />
+            <Link to={`/search`}>Поиск по заявкам</Link>
+          < /div>
+        < /div>
       < /div>
       );
   },

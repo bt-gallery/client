@@ -1,4 +1,5 @@
 import React from 'react';
+import {PropTypes} from 'react';
 import Dropzone from 'react-dropzone';
 import Superagent from 'superagent';
 import Ee from 'event-emitter';
@@ -14,6 +15,9 @@ const infoStyle = {
 };
 
 const ImageZone = React.createClass({
+  propTypes: {
+    toggleLoading: PropTypes.func,
+  },
   getInitialState: function() {
     return {
       files: [],
@@ -26,6 +30,7 @@ const ImageZone = React.createClass({
 
   onDrop: function(files) {
     self = this;
+    this.props.toggleLoading();
     Superagent.post('/api/v1/competitive-work/upload/')
     .attach('image',files[0])
     .end(function(err, res) {
@@ -36,6 +41,7 @@ const ImageZone = React.createClass({
         sessionStorage.setItem(
           'webPath', res.body[0].success.webPath
           );
+        self.props.toggleLoading();
       } else {
         self.setState({open:true, error:'Ой! Ошибка.'});
       }
@@ -54,7 +60,10 @@ const ImageZone = React.createClass({
   render: function() {
     return (
       <div>
-        <Dropzone ref="dropzone" onDrop={this.onDrop} style={style}>
+        <Dropzone ref="dropzone" onDrop={this.onDrop} multiple={false}
+          accept={'image/*'}
+          style={style}
+        >
           <div style={infoStyle}>Кликните или перетащите сюда файл с рисунком</div>
           {this.state.files.length > 0 ? <div>
             <div>

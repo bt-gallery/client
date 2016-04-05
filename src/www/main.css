@@ -45,14 +45,9 @@ html {
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
 	display: block;
 }
-body {
-	font: 12px/18px Arial, sans-serif;
-	height: 100%;
-}
+
 .wrapper {
 	width: 100%;
-	min-width: 1000px;
-	min-height: 100%;
 	height: auto !important;
 	height: 100%;
 }
@@ -79,7 +74,6 @@ body {
 -----------------------------------------------------------------------------*/
 .footer {
 	margin: -100px auto 0;
-	min-width: 1000px;
 	height: 100px;
 	position: relative;
 }
@@ -94,4 +88,87 @@ body {
 
 #logo {
 	margin: 20px;
+}
+
+/* Responsive layout */
+
+  /*  SECTIONS  */
+.section {
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+}
+
+/*  COLUMN SETUP  */
+.col {
+  display: block;
+  float:left;
+  margin: 1% 0 1% 1.6%;
+}
+
+/*  GROUPING  */
+.group:before,
+.group:after { content:""; display:table; }
+.group:after { clear:both;}
+.group { zoom:1; /* For IE 6/7 */ }
+
+/*  GRID OF TWO  */
+.span_2_of_2 {
+  width: 22%;
+}
+.span_1_of_2 {
+  width: 58%;
+}
+
+/*  GRID OF THREE  */
+.span_3_of_3 { width: 100%; }
+.span_2_of_3 { }
+.span_1_of_3 { width: 32.26%; }
+
+/* INFO BLOCK TUNE */
+.paragraph_margined p {
+  margin: 20px 0 0 0;
+  text-align:left;
+}
+
+.info-block{
+  font-size: 19px;
+  color: grey;
+}
+
+.info-block-2{
+  font-size: 19px;
+  color: #404040;
+  padding: 0 5% 0 10%;
+}
+
+.info-block-3{
+  font-size: 14px;
+  color: grey;
+}
+
+/*  GO FULL WIDTH BELOW 480 PIXELS */
+@media only screen and (max-width: 480px) {
+  .col {  margin: 1% 0 1% 0%; }
+  .span_3_of_3, .span_2_of_3, .span_1_of_3 { width: 100%; }
+}
+
+/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+
+@media only screen and (max-width: 480px) {
+  .col {
+    margin: 1% 0 1% 0%;
+    padding: 0 5%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .tough {
+    margin: 1% 0 1% 0%;
+    padding: 1%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .span_2_of_2, .span_1_of_2 { width: 100%; }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import {deepOrange500} from 'material-ui/lib/styles/colors';
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
+import {browserHistory} from 'react-router';
 
 
 const styles = {
@@ -20,12 +21,17 @@ const FrontPage = React.createClass({
   propTypes : {
     children: React.PropTypes.node,
   },
+
+  componentDidMount: function() {
+    sessionStorage.clear();
+    browserHistory.push("/dashboard");
+  },
+
   render : function render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div style={styles.container}>
+        <div style={styles.container} className="section group">
           {this.props.children}
-          <div className="info-block" / >
         < /div>
       < /MuiThemeProvider>
       );

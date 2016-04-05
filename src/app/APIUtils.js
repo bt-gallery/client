@@ -1,9 +1,10 @@
 import Ee from 'event-emitter';
 import Superagent from 'superagent';
 
-const bindCompetitiveWork = function(idParticipant, idCompetitiveWork) {
+const bindCompetitiveWork = function(idParticipant, idDeclarant, idCompetitiveWork) {
   Superagent.post('/api/v1/competitive/bind')
     .field('idParticipant',idParticipant)
+    .field('idDeclarant',idDeclarant)
     .field('idCompetitiveWork',idCompetitiveWork)
     .end(function(err, res) {
       if (res && res.body && res.body.success) {
