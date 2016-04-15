@@ -1,11 +1,26 @@
 import Superagent from 'superagent';
+import Pagination from './Pagination';
+let EventEmitter = require('events').EventEmitter;
+
 
 module.exports = {
-    getPhotos: function() {
-        Superagent.get('/api/v1/contributionSigned/getList/10/0')
+
+    eventEmitter: EventEmitter.prototype,
+
+    addRecieveListener: function(callback) {
+        EventEmitter.prototype.on('recieve', callback);
+    },
+    removeRecieveListener: function(callback){
+        EventEmitter.prototype.removeListener('recieve', callback);
+    },
+
+    getPhotos: function(limit, offset) {
+        let raw = {};
+        Superagent.get('/api/v1/contributionSigned/getList/'+limit+'/'+offset)
                .end(function(err, res) {
                 if (res && res.body) {
-                    return res.body;
+                    raw = res.body;
+                    this.eventEmitter.emit('recieve', raw, limit, offset);
                 } //TODO обработать err
             });
     },
