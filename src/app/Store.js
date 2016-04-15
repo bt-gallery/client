@@ -3,9 +3,11 @@ let EventEmitter = require('events').EventEmitter;
 import PhotoAPIUtils from './PhotoAPIUtils';
 
 
-let Store = {
+const Store = {
 
     images:{},
+
+    offset:'',
 
     eventEmitter:EventEmitter.prototype,
 
@@ -22,11 +24,11 @@ let Store = {
     },
 
     getNew: function (raw, limit, offset) {
-        this.images = raw;
-        let oldOffset = offset;
-        offset += offset;
-        this.eventEmitter.emit('change',oldOffset, offset);
-        PhotoAPIUtils.removeRecieveListener(this.getNew);
+        let prev_offset = (offset-limit)>0 ? offset-limit : 0;
+        let next_offset = offset+limit;
+        Store.images = raw;
+        Store.eventEmitter.emit('change',prev_offset, next_offset);
+        //PhotoAPIUtils.removeRecieveListener(this.getNew);
     },
 
 };

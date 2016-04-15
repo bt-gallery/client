@@ -6,7 +6,7 @@ import PhotoAPIUtils from './PhotoAPIUtils';
 
 
 
-const Pagination = React.createClass({ //TODO Эмиттить ченч
+const Pagination = React.createClass({
 
     eventEmitter: EventEmitter.prototype,
 
@@ -20,10 +20,16 @@ const Pagination = React.createClass({ //TODO Эмиттить ченч
         PhotoAPIUtils.getPhotos(limit,offset);
     },
     render: function() {
-        return <div>
-            <RaisedButton label="Предыдущая" primary={true} onClick={this.handleBackClick}/>
-            <RaisedButton label="Следующая" primary={true} onClick={this.handleNextClick}/>
-        </div>;
+        if (this.props.prevPageOffset===0) {
+            return <div>
+                <RaisedButton label="Следующая" primary={true} onClick={this.handleNextClick}/>
+            </div>;
+        } else {
+            return <div>
+                <RaisedButton label="Предыдущая" primary={true} onClick={this.handleBackClick} style={{marginRight: 10}}/>
+                <RaisedButton label="Следующая" primary={true} onClick={this.handleNextClick}/>
+            </div>;
+        }
     },
 });
 

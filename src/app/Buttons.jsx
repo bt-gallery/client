@@ -12,7 +12,7 @@ const Buttons = React.createClass({
     },
     render: function() {
         return <div>
-            <RaisedButton label="Найти ветерана" primary={true} onClick={this.handleFindClick}/>
+            <RaisedButton label="Найти ветерана" primary={true} onClick={this.handleFindClick} style={{marginRight: 10}}/>
             <RaisedButton label="Добавить фото из личного архива" secondary={true} onClick={this.handleAddClick}/>
         </div>;
     },

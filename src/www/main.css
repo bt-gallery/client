@@ -214,7 +214,7 @@ img{
 }
 
 .masonry {
-    margin: 1.5em 0;
+    margin: 48px 0;
     padding: 0;
     -moz-column-gap: 1.5em;
     -webkit-column-gap: 1.5em;
@@ -260,14 +260,50 @@ img{
     cursor:inherit;
     font-size: 12px;
     padding:0 10px;
-    text-align: left;
+    text-align: justify;
 }
-
+.detail-image{
+    max-width:100%;
+}
+.image-wrapper{
+    width:50%;
+    float:left;
+}
+.detail{
+    width:50%;
+    float:left;
+}
+.story{
+    text-align: justify;
+    padding: 25px 25px 0 25px;
+    line-height: 30px;
+    font-size: 15px;
+    text-indent: 8%;
+}
+.full-name, .year{
+    font-size:20px;
+}
+.year{
+    margin-top: 15px;
+}
+.to-gallery{
+    margin-bottom: 42px;
+}
 @media only screen and (min-width: 700px) {
     .masonry {
         -moz-column-count: 2;
         -webkit-column-count: 2;
         column-count: 2;
+    }
+}
+@media screen and (max-width: 800px) {
+    .image-wrapper{
+        width:100%
+    }
+    .detail{
+        margin-top: 40px;
+        width: 100%;
+        clear:both;
     }
 }
 
