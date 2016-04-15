@@ -17,3 +17,5 @@ const Buttons = React.createClass({
         </div>;
     },
 });
+
+module.exports = Buttons;
