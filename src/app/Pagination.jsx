@@ -22,12 +22,16 @@ const Pagination = React.createClass({
     render: function() {
         if (this.props.prevPageOffset===0) {
             return <div>
-                <RaisedButton label="Следующая" primary={true} onClick={this.handleNextClick}/>
+                <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
+            </div>;
+        } else if (this.props.nextPageOffset===0) {
+            return <div>
+                <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick}/>
             </div>;
         } else {
             return <div>
-                <RaisedButton label="Предыдущая" primary={true} onClick={this.handleBackClick} style={{marginRight: 10}}/>
-                <RaisedButton label="Следующая" primary={true} onClick={this.handleNextClick}/>
+                <RaisedButton label="Предыдущая" onClick={this.handleBackClick} labelColor="#FFF"  backgroundColor='#A20000' style={{marginRight: 10}}/>
+                <RaisedButton label="Следующая" onClick={this.handleNextClick} labelColor="#FFF"  backgroundColor='#A20000'/>
             </div>;
         }
     },

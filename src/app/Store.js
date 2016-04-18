@@ -23,9 +23,9 @@ const Store = {
         return this.images;
     },
 
-    getNew: function (raw, limit, offset) {
+    getNew: function (raw, limit, offset, total) {
         let prev_offset = (offset-limit)>0 ? offset-limit : 0;
-        let next_offset = offset+limit;
+        let next_offset = (offset+limit<total) ? offset+limit : 0;
         Store.images = raw;
         Store.eventEmitter.emit('change',prev_offset, next_offset);
         //PhotoAPIUtils.removeRecieveListener(this.getNew);
