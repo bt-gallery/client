@@ -31,7 +31,7 @@ const ImageZone = React.createClass({
   onDrop: function(files) {
     self = this;
     this.props.toggleLoading();
-    Superagent.post('/api/v1/competitive-work/upload/')
+    Superagent.post('/api/v1/contribution/add/')
     .attach('image',files[0])
     .end(function(err, res) {
       if (res && res.body && res.body.length && res.body[0].success) {

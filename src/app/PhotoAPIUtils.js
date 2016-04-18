@@ -3,7 +3,7 @@ import Pagination from './Pagination';
 let EventEmitter = require('events').EventEmitter;
 
 
-module.exports = {
+const PhotoAPIUtils = {
 
     eventEmitter: EventEmitter.prototype,
 
@@ -16,7 +16,7 @@ module.exports = {
 
     getPhotos: function(limit, offset) {
         let raw;
-
+/*
         raw = [
             {
                 "id": "1",
@@ -306,20 +306,21 @@ module.exports = {
             },
         ];
         this.eventEmitter.emit('recieve', raw, limit, offset, 80);
-
-        /*Superagent.get('/api/v1/contributionSigned/getList/'+limit+'/'+offset)
+*/
+        Superagent.get('/api/v1/contributionSigned/getList/'+limit+'/'+offset)
                .end(function(err, res) {
                 if (res && res.body && !res.body.error) {
                     raw = res.body.data;
-                    total=res.body.meta.total;
-                    this.eventEmitter.emit('recieve', raw, limit, offset, total);
+                    let total=res.body.meta.total;
+                    PhotoAPIUtils.eventEmitter.emit('recieve', raw, limit, offset, total);
                 } else if (res.body.error){
                     console.log(res.body.error['message']+' | '+res.body.error['legend']);
                 } //TODO обработать err
-            });*/
+            });
     },
     getDetailInfo: function(photo_id) {
-        let info = {};
+
+        let info = {};/*
         info.photo = {
             "id": "1",
             "time": "2016-04-14 18:33:49",
@@ -348,8 +349,8 @@ module.exports = {
             "moderation": null,
             "rejection": null,
             "team": null,
-        };
-        /*
+        };*/
+
         Superagent.get('/api/v1/contribution/get/'+photo_id)
             .end(function(err, res) {
                 if (res && res.body) {
@@ -361,7 +362,9 @@ module.exports = {
                             } //TODO обработать err
                         });
                 } //TODO обработать err
-            });*/
+            });
         return info;
     },
 };
+
+module.exports = PhotoAPIUtils;

@@ -35,59 +35,53 @@ const RegisterDeclarantForm = React.createClass({
   handleSubmit : function() {
     if (isNull(email)) {
       valid = false;
-      this.setState({emailErrorMessageText:"Обязательно заполнить"});
+      this.setState({emailErrorMessageText: "Обязательно заполнить"});
       return;
     } else {
       valid = true;
-      this.setState({emailErrorMessageText:""});
+      this.setState({emailErrorMessageText: ""});
     }
 
     if (!isEmail(email)) {
       valid = false;
-      this.setState({emailErrorMessageText:"Неверный формат почты"});
+      this.setState({emailErrorMessageText: "Неверный формат почты"});
       return;
     } else {
       valid = true;
-      this.setState({emailErrorMessageText:""});
+      this.setState({emailErrorMessageText: ""});
     }
 
     if (isNull(name)) {
       valid = false;
-      this.setState({nameErrorMessageText:"Обязательно заполнить"});
+      this.setState({nameErrorMessageText: "Обязательно заполнить"});
       return;
     } else {
       valid = true;
-      this.setState({nameErrorMessageText:""});
+      this.setState({nameErrorMessageText: ""});
     }
 
     if (isNull(surname)) {
       valid = false;
-      this.setState({surnameErrorMessageText:"Обязательно заполнить"});
+      this.setState({surnameErrorMessageText: "Обязательно заполнить"});
       return;
     } else {
       valid = true;
-      this.setState({surnameErrorMessageText:""});
+      this.setState({surnameErrorMessageText: ""});
     }
-    if (isNull(phone)) {
-      valid = false;
-      this.setState({phoneErrorMessageText:"Обязательно заполнить"});
-      return;
-    } else {
-      valid = true;
-      this.setState({phoneErrorMessageText:""});
-    }
+    if (phone) {
       if (!phone.match(/^[0-9()\-+ ]+$/)) {
-      valid = false;
-      this.setState({phoneErrorMessageText:"Неверный формат номера!"});
-      return;
-    } else if (phone.length>23){
         valid = false;
-        this.setState({phoneErrorMessageText:"Номер не должен содержать более 23 символов!"});
+        this.setState({phoneErrorMessageText: "Неверный формат номера!"});
+        return;
+      } else if (phone.length > 23) {
+        valid = false;
+        this.setState({phoneErrorMessageText: "Номер не должен содержать более 23 символов!"});
         return;
       } else {
-      valid = true;
-      this.setState({phoneErrorMessageText:""});
-    }
+        valid = true;
+        this.setState({phoneErrorMessageText: ""});
+      }
+  }
 
     //Just to have ESLint shut use patronymic someway
     if (!isNull(patronymic)) {
@@ -108,8 +102,8 @@ const RegisterDeclarantForm = React.createClass({
           console.log(res);
           console.log(err);
           if (res && res.body && res.body.success
-            && res.body.success.idDeclarant ) {
-            sessionStorage.setItem('idDeclarant', res.body.success.idDeclarant);
+            && res.body.success.id ) {
+            sessionStorage.setItem('idDeclarant', res.body.success.id);
             browserHistory.push("/participant");
           } else {
             self.setState({open:true, error:'Ой! Ошибка.'});
@@ -152,7 +146,7 @@ const RegisterDeclarantForm = React.createClass({
         <div className="register col tough span_1_of_2">
           <h2>Регистрация заявителя< /h2>
           <TextField
-            floatingLabelText="Электронная почта"
+            floatingLabelText="Электронная почта*"
             errorText={this.state.emailErrorMessageText}
             onChange={this.handleEmailChange}
             style={style}
@@ -166,14 +160,14 @@ const RegisterDeclarantForm = React.createClass({
           / >
           <br / >
           <TextField
-              floatingLabelText="Фамилия"
+              floatingLabelText="Фамилия*"
               errorText={this.state.surnameErrorMessageText}
               onChange={this.handleSurnameChange}
               style={style}
           / >
           <br / >
           <TextField
-            floatingLabelText="Имя"
+            floatingLabelText="Имя*"
             errorText={this.state.nameErrorMessageText}
             onChange={this.handleNameChange}
             style={style}
@@ -181,7 +175,6 @@ const RegisterDeclarantForm = React.createClass({
           <br / >
           <TextField
             floatingLabelText="Отчество"
-            errorText={this.state.patronymicErrorMessageText}
             onChange={this.handlePatronymicChange}
             style={style}
           / >

@@ -42,7 +42,7 @@ const add = {
 
 let name="";
 let surname="";
-let legend="";
+let description="";
 let photoInfo="";
 let year="";
 let patronymic="";
@@ -142,7 +142,7 @@ const RegisterParticipantForm = React.createClass({
 
   handleSubmit: function() {
     this.setState({registerButtonDisabled:true});
-    Superagent.post('/api/v1/competitive-bid/register/')
+    Superagent.put('/api/v1/register/')
       .field('idDeclarant', sessionStorage.getItem('idDeclarant'))
       .end(function(err, res) {
         if (res && res.body && res.body.success) {
@@ -171,14 +171,14 @@ const RegisterParticipantForm = React.createClass({
   handleYearChange : function(event) {
     year = event.target.value;
   },
-  handleLegendChange : function(event) {
-    legend = event.target.value;
+  handleDescriptionChange : function(event) {
+    description = event.target.value;
   },
   handlePatronymicChange : function(event) {
     patronymic = event.target.value;
   },
   handlePhotoInfoChange : function(event) {
-    photoInfo = event.target.value;
+    photoInfo = event.target.value; //TODO Не предусмотрено API!
   },
 
   onDrop: function(files) {
@@ -255,7 +255,6 @@ const RegisterParticipantForm = React.createClass({
             <br / >
             <TextField
               floatingLabelText="Отчество"
-              errorText={this.state.patronymicErrorMessageText}
               onChange={this.handlePatronymicChange}
               style={style}
             / >
@@ -270,7 +269,7 @@ const RegisterParticipantForm = React.createClass({
               <TextField
               floatingLabelText="Информация о ветеране"
               className="about"
-              onChange={this.handleLegendChange}
+              onChange={this.handleDescriptionChange}
               multiLine={true}
               style={about}
             / >

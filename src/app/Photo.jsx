@@ -3,17 +3,21 @@ import {Link} from 'react-router';
 
 
 let Photo = React.createClass({
-    cutStr: function(string){
-        let result='';
-        let first = string.slice(0, 130);
-        let second = string.slice(130);
-        if (first[129] === '.' || string.length<=130) {
-            result = first;
+    cutStr: function(string) {
+        if (!string) {
+            return 'Нет описания';
         } else {
-            let substrs = second.split('.');
-            result = first+substrs[0]+'.';
+            let result = '';
+            let first = string.slice(0, 130);
+            let second = string.slice(130);
+            if (first[129] === '.' || string.length <= 130) {
+                result = first;
+            } else {
+                let substrs = second.split('.');
+                result = first + substrs[0] + '.';
+            }
+            return result;
         }
-        return result;
     },
     render: function () {
         return <Link to={{pathname: '/photo/'+this.props.id}}>
