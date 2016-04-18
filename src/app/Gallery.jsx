@@ -34,7 +34,7 @@ const Gallery = React.createClass({
     buildElements: function(photos){
         let elements = [];
         for (let i in photos){
-            elements.push(<Photo id={photos[i]['id']} key={photos[i]['idParticipant']} path={photos[i]['webPath']} name={photos[i]['participantName']} surname={photos[i]['surname']} year={photos[i]['year']} info={photos[i]['participantDescription']}/>);
+            elements.push(<Photo id={photos[i]['id']} key={photos[i]['id']} path={photos[i]['webPath']} name={photos[i]['participantName']} surname={photos[i]['surname']} year={photos[i]['year']} info={photos[i]['participantDescription']}/>);
         }
         return elements;
     },
