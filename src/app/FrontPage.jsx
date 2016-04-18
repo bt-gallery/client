@@ -24,7 +24,7 @@ const FrontPage = React.createClass({
 
   componentDidMount: function() {
     sessionStorage.clear();
-    browserHistory.push("/dashboard");
+    browserHistory.push("gallery");
   },
 
   render : function render() {

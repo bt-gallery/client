@@ -15,11 +15,12 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 import {browserHistory} from 'react-router';
 
 const style = {
-  marginLeft: 0,
+  float: 'left',
 };
 
 const styleBlock = {
   display:"inline-flex",
+  'paddingLeft':'30px',
 };
 const styleImageWaiting = {
   position: 'absolute',
@@ -29,9 +30,22 @@ const styleImageWaiting = {
   zIndex:-1,
 };
 
+const about = {
+    '.about>label':{
+        'left':0,
+    },
+};
+const add = {
+    float: 'left',
+    width: 173,
+}
+
 let name="";
 let surname="";
-let age="";
+let legend="";
+let photoInfo="";
+let year="";
+let patronymic="";
 
 let valid = false;
 
@@ -40,6 +54,7 @@ const RegisterParticipantForm = React.createClass({
     return {
       nameErrorMessageText: "",
       surnameErrorMessageText: "",
+      yearErrorMessageText: "",
       imageErrorMessageText:"",
       registerButtonDisabled:  true,
       addButtonDisabled: false,
@@ -78,14 +93,14 @@ const RegisterParticipantForm = React.createClass({
       this.setState({surnameErrorMessageText:""});
     }
 
-    if (!isInt(age.trim(), {min:4, max:18})) {
+    if (!isInt(year.trim(), {min:1800, max:1945})) {
       valid = false;
-      this.setState({ageErrorMessageText:"Возраст цифрами от 4 до 18, включительно"});
+      this.setState({yearErrorMessageText:"Вы ввели "+year+" год!"});
       this.setState({addButtonDisabled:false});
       return;
     } else {
       valid = true;
-      this.setState({ageErrorMessageText:""});
+      this.setState({yearErrorMessageText:""});
     }
 
     if (sessionStorage.getItem('idCompetitiveWork') === '' || sessionStorage.getItem("idCompetitiveWork") === null) {
@@ -95,11 +110,12 @@ const RegisterParticipantForm = React.createClass({
 
     if (valid) {
       self = this;
-      Superagent.post('/api/v1/participant/')
+        Superagent.post('/api/v1/participant/add')
         .field('idDeclarant', sessionStorage.getItem('idDeclarant'))
         .field('name',name)
         .field('surname',surname)
-        .field('age',age)
+        .field('patronymic',patronymic)
+        .field('year',year)
         .end(function(err, res) {
           if (res && res.body && res.body.success) {
             Ee.methods.emit(
@@ -141,7 +157,7 @@ const RegisterParticipantForm = React.createClass({
   },
 
   handleCloseDialog: function() {
-    browserHistory.push("/address");
+    browserHistory.push("/gallery");
   },
 
   handleNameChange : function(event) {
@@ -152,8 +168,17 @@ const RegisterParticipantForm = React.createClass({
     surname = event.target.value;
   },
 
-  handleAgeChange : function(event) {
-    age = event.target.value;
+  handleYearChange : function(event) {
+    year = event.target.value;
+  },
+  handleLegendChange : function(event) {
+    legend = event.target.value;
+  },
+  handlePatronymicChange : function(event) {
+    patronymic = event.target.value;
+  },
+  handlePhotoInfoChange : function(event) {
+    photoInfo = event.target.value;
   },
 
   onDrop: function(files) {
@@ -201,7 +226,7 @@ const RegisterParticipantForm = React.createClass({
           </p>
           <p>
           После того, как Вы добавите рисунки всех детей, обязательно нажмите кнопку "Зарегистрировать".
-          </p>
+         </p>
           <p>
           Только после этого Ваша заявка будет принята на модерацию.
           </p>
@@ -214,7 +239,14 @@ const RegisterParticipantForm = React.createClass({
         <div className="col span_2_of_3" style={styleBlock}>
           <div>
             <TextField
-              floatingLabelText="Имя участника"
+                floatingLabelText="Фамилия"
+                errorText={this.state.surnameErrorMessageText}
+                onChange={this.handleSurnameChange}
+                style={style}
+            / >
+            <br / >
+            <TextField
+              floatingLabelText="Имя"
               errorText={this.state.nameErrorMessageText}
               onChange={this.handleNameChange}
               name={name}
@@ -222,20 +254,37 @@ const RegisterParticipantForm = React.createClass({
             / >
             <br / >
             <TextField
-              floatingLabelText="Фамилия"
-              errorText={this.state.surnameErrorMessageText}
-              onChange={this.handleSurnameChange}
+              floatingLabelText="Отчество"
+              errorText={this.state.patronymicErrorMessageText}
+              onChange={this.handlePatronymicChange}
               style={style}
             / >
             <br / >
             <TextField
-              floatingLabelText="Возраст"
-              errorText={this.state.ageErrorMessageText}
-              onChange={this.handleAgeChange}
+              floatingLabelText="Год рождения"
+              errorText={this.state.yearErrorMessageText}
+              onChange={this.handleYearChange}
               style={style}
             / >
             <br / >
+              <TextField
+              floatingLabelText="Информация о ветеране"
+              className="about"
+              onChange={this.handleLegendChange}
+              multiLine={true}
+              style={about}
+            / >
             <br / >
+              <TextField
+              floatingLabelText="Информация о фото"
+              multiLine={true}
+              onChange={this.handlePhotoInfoChange}
+              className="about"
+              style={about}
+            / >
+            <br / >
+            <br / >
+              <div className="upload">
             <div style={styleImageWaiting}>
             {this.state.loading ?
               <CircularProgress size={2} /> : null
@@ -245,19 +294,11 @@ const RegisterParticipantForm = React.createClass({
             <br / >
             <br / >
             <RaisedButton
-              label="Добавить участника"
+              label="Добавить фото"
               onMouseDown={this.handleAddParticipant}
-              style={style}
+              style={add}
               disabled={this.state.addButtonDisabled}
             / >
-            {this.state.open ?
-              <Snackbar
-                open={this.state.open}
-                message={this.state.message}
-                action="Ok"
-                autoHideDuration={5000}
-                onRequestClose={this.handleRequestClose}
-              /> : null}
             <br / >
             <br / >
             {this.state.sending ?
@@ -271,6 +312,15 @@ const RegisterParticipantForm = React.createClass({
                 onMouseDown={this.handleSubmit}
                 style={style}
               / >}
+                  </div>
+              {this.state.open ?
+                  <Snackbar
+                      open={this.state.open}
+                      message={this.state.message}
+                      action="Ok"
+                      autoHideDuration={5000}
+                      onRequestClose={this.handleRequestClose}
+                  /> : null}
             <Dialog
               title="Успешная регистрация!"
               actions={modalActions}
@@ -284,7 +334,7 @@ const RegisterParticipantForm = React.createClass({
             </Dialog>
           < /div>
         < /div>
-        <div className="col tough span_2_of_3">
+        <div className="col tough span_3_of_3">
           <ParticipantsList / >
         < /div>
       < /div>

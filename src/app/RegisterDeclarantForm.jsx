@@ -3,6 +3,7 @@ import TextField from 'material-ui/lib/text-field';
 import FlatButton from 'material-ui/lib/flat-button';
 import isEmail from 'validator/lib/isEmail';
 import isNull from 'validator/lib/isNull';
+import isMobilePhone from 'validator/lib/isMobilePhone';
 import {browserHistory, Link} from 'react-router';
 import Superagent from 'superagent';
 import CircularProgress from 'material-ui/lib/circular-progress';
@@ -16,6 +17,7 @@ let email="";
 let name="";
 let surname="";
 let patronymic="";
+let phone="";
 
 let valid = false;
 
@@ -26,6 +28,7 @@ const RegisterDeclarantForm = React.createClass({
       emailErrorMessageText : "",
       nameErrorMessageText: "",
       surnameErrorMessageText: "",
+      phoneErrorMessageText: "",
     };
   },
 
@@ -65,6 +68,26 @@ const RegisterDeclarantForm = React.createClass({
       valid = true;
       this.setState({surnameErrorMessageText:""});
     }
+    if (isNull(phone)) {
+      valid = false;
+      this.setState({phoneErrorMessageText:"Обязательно заполнить"});
+      return;
+    } else {
+      valid = true;
+      this.setState({phoneErrorMessageText:""});
+    }
+      if (!phone.match(/^[0-9()\-+ ]+$/)) {
+      valid = false;
+      this.setState({phoneErrorMessageText:"Неверный формат номера!"});
+      return;
+    } else if (phone.length>23){
+        valid = false;
+        this.setState({phoneErrorMessageText:"Номер не должен содержать более 23 символов!"});
+        return;
+      } else {
+      valid = true;
+      this.setState({phoneErrorMessageText:""});
+    }
 
     //Just to have ESLint shut use patronymic someway
     if (!isNull(patronymic)) {
@@ -74,11 +97,12 @@ const RegisterDeclarantForm = React.createClass({
     if (valid) {
       self = this;
       this.setState({sending:true});
-      Superagent.post('/api/v1/declarant/')
+      Superagent.post('/api/v1/declarant/add')
         .field('email',email)
         .field('name',name)
         .field('surname',surname)
         .field('patronymic',patronymic)
+        .field('phone',phone)
         .set('Accept','application/json')
         .end(function(err, res) {
           console.log(res);
@@ -112,6 +136,10 @@ const RegisterDeclarantForm = React.createClass({
     surname = event.target.value;
   },
 
+  handlePhoneChange : function(event) {
+    phone = event.target.value;
+  },
+
   handleRequestClose : function() {
     this.setState({
       open: false,
@@ -121,7 +149,7 @@ const RegisterDeclarantForm = React.createClass({
   render : function() {
     return (
       <div>
-        <div className="col tough span_1_of_2">
+        <div className="register col tough span_1_of_2">
           <h2>Регистрация заявителя< /h2>
           <TextField
             floatingLabelText="Электронная почта"
@@ -131,7 +159,21 @@ const RegisterDeclarantForm = React.createClass({
           / >
           <br / >
           <TextField
-            floatingLabelText="Имя заявителя"
+              floatingLabelText="Телефон"
+              errorText={this.state.phoneErrorMessageText}
+              onChange={this.handlePhoneChange}
+              style={style}
+          / >
+          <br / >
+          <TextField
+              floatingLabelText="Фамилия"
+              errorText={this.state.surnameErrorMessageText}
+              onChange={this.handleSurnameChange}
+              style={style}
+          / >
+          <br / >
+          <TextField
+            floatingLabelText="Имя"
             errorText={this.state.nameErrorMessageText}
             onChange={this.handleNameChange}
             style={style}
@@ -141,13 +183,6 @@ const RegisterDeclarantForm = React.createClass({
             floatingLabelText="Отчество"
             errorText={this.state.patronymicErrorMessageText}
             onChange={this.handlePatronymicChange}
-            style={style}
-          / >
-          <br / >
-          <TextField
-            floatingLabelText="Фамилия"
-            errorText={this.state.surnameErrorMessageText}
-            onChange={this.handleSurnameChange}
             style={style}
           / >
           <br / >
@@ -172,10 +207,9 @@ const RegisterDeclarantForm = React.createClass({
             /> : null}
         < /div>
         <div className="col tough span_2_of_2 info-block">
-          Заявитель, тот кто подает заявку на участие ребенка или группы ребят в конкурсе.
-          <div style={{margin:50}}>
+          <div>
             <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
-              Как заполнять заявку
+              Как заполнять заявку?
             < /a>
             <br />
             <br />

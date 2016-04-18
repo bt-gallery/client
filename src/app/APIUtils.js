@@ -2,7 +2,7 @@ import Ee from 'event-emitter';
 import Superagent from 'superagent';
 
 const bindCompetitiveWork = function(idParticipant, idDeclarant, idCompetitiveWork) {
-  Superagent.post('/api/v1/competitive/bind')
+  Superagent.put('/api/v1/contribution/update')
     .field('idParticipant',idParticipant)
     .field('idDeclarant',idDeclarant)
     .field('idCompetitiveWork',idCompetitiveWork)
