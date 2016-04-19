@@ -4,21 +4,37 @@ import ToGalleryBtn from './ToGalleryBtn';
 import PhotoAPIUtils from './PhotoAPIUtils';
 
 const Detail = React.createClass({
+    componentDidMount:function(){
+        PhotoAPIUtils.addRecieveInfoListener(this.getInfo);
+        PhotoAPIUtils.getDetailInfo(this.props.params.id);
+    },
+    componentWillUnmount:function(){
+        PhotoAPIUtils.removeRecieveInfoListener(this.getInfo);
+    },
     getInitialState: function(){
-        return {
-            info: PhotoAPIUtils.getDetailInfo(this.props.params.id),
-        };
+      return {
+          info:'',
+      }
+    },
+    getInfo:function(info){
+        this.setState({
+            info:info,
+        });
     },
     render: function() {
-        return <div className="detail-wrapper">
-            <ToGalleryBtn />
-         <div className="image-wrapper"><img className="detail-image" src={this.state.info.photo.webPath}/></div>
-            <div className="detail">
-                <p className="full-name">{this.state.info.participant.name} {this.state.info.participant.patronymic ? this.state.info.participant.patronymic : ''} {this.state.info.participant.surname}</p>
-                <p className="year">{this.state.info.participant.year}</p>
-                <p className="story">{this.state.info.participant.description}</p>
-            </div>
-        </div>;
+        if (this.state.info) {
+            return <div className="detail-wrapper">
+                <ToGalleryBtn />
+                <div className="image-wrapper"><img className="detail-image" src={this.state.info.photo.webPath}/></div>
+                <div className="detail">
+                    <p className="full-name">{this.state.info.participant.name} {this.state.info.participant.patronymic ? this.state.info.participant.patronymic : ''} {this.state.info.participant.surname}</p>
+                    <p className="year">{this.state.info.participant.year} г.р.</p>
+                    <p className="story">{this.state.info.participant.description}</p>
+                </div>
+            </div>;
+        } else {
+            return false;
+        }
     },
 });
 module.exports = Detail;
