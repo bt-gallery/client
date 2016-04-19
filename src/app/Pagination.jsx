@@ -11,16 +11,16 @@ const Pagination = React.createClass({
     eventEmitter: EventEmitter.prototype,
 
     handleBackClick: function(){
-        this._onClick(2, this.props.prevPageOffset);
+        this._onClick(20, this.props.prevPageOffset);
     },
     handleNextClick: function(){
-        this._onClick(2, this.props.nextPageOffset);
+        this._onClick(20, this.props.nextPageOffset);
     },
     _onClick: function(limit, offset){
         PhotoAPIUtils.getPhotos(limit,offset);
     },
     render: function() {
-        if (this.props.total>2) {
+        if (this.props.total>20) {
             if (this.props.prevPageOffset>=0 && this.props.nextPageOffset<this.props.total) {
                 return <div>
                     <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick} style={{marginRight:10}}/>

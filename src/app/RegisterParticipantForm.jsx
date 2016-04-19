@@ -93,7 +93,12 @@ const RegisterParticipantForm = React.createClass({
       this.setState({surnameErrorMessageText:""});
     }
 
-    if (!isInt(year.trim(), {min:1800, max:1945})) {
+    if (isNull(year)) {
+      valid = false;
+      this.setState({yearErrorMessageText:"Обязательно заполнить"});
+      this.setState({addButtonDisabled:false});
+      return;
+    } else if (!isInt(year.trim(), {min:1800, max:1945})){
       valid = false;
       this.setState({yearErrorMessageText:"Вы ввели "+year+" год!"});
       this.setState({addButtonDisabled:false});
@@ -242,14 +247,14 @@ const RegisterParticipantForm = React.createClass({
         <div className="col span_2_of_3" style={styleBlock}>
           <div>
             <TextField
-                floatingLabelText="Фамилия"
+                floatingLabelText="Фамилия*"
                 errorText={this.state.surnameErrorMessageText}
                 onChange={this.handleSurnameChange}
                 style={style}
             / >
             <br / >
             <TextField
-              floatingLabelText="Имя"
+              floatingLabelText="Имя*"
               errorText={this.state.nameErrorMessageText}
               onChange={this.handleNameChange}
               name={name}
@@ -263,7 +268,7 @@ const RegisterParticipantForm = React.createClass({
             / >
             <br / >
             <TextField
-              floatingLabelText="Год рождения"
+              floatingLabelText="Год рождения*"
               errorText={this.state.yearErrorMessageText}
               onChange={this.handleYearChange}
               style={style}
