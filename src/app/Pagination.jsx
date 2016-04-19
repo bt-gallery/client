@@ -11,28 +11,33 @@ const Pagination = React.createClass({
     eventEmitter: EventEmitter.prototype,
 
     handleBackClick: function(){
-        this._onClick(10, this.props.prevPageOffset);
+        this._onClick(2, this.props.prevPageOffset);
     },
     handleNextClick: function(){
-        this._onClick(10, this.props.nextPageOffset);
+        this._onClick(2, this.props.nextPageOffset);
     },
     _onClick: function(limit, offset){
         PhotoAPIUtils.getPhotos(limit,offset);
     },
     render: function() {
-        if (this.props.prevPageOffset===0) {
-            return <div>
-                <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
-            </div>;
-        } else if (this.props.nextPageOffset===0) {
-            return <div>
-                <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick}/>
-            </div>;
-        } else {
-            return <div>
-                <RaisedButton label="Предыдущая" onClick={this.handleBackClick} labelColor="#FFF"  backgroundColor='#A20000' style={{marginRight: 10}}/>
-                <RaisedButton label="Следующая" onClick={this.handleNextClick} labelColor="#FFF"  backgroundColor='#A20000'/>
-            </div>;
+        if (this.props.total>2) {
+            if (this.props.prevPageOffset>=0 && this.props.nextPageOffset<this.props.total) {
+                return <div>
+                    <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick} style={{marginRight:10}}/>
+                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
+                </div>;
+            } else if (this.props.prevPageOffset>=0 && this.props.nextPageOffset>=this.props.total){
+               return <div>
+                   <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick}/>
+                </div>;
+            } else if (this.props.prevPageOffset<0 && this.props.nextPageOffset<this.props.total){
+                return <div>
+                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
+                </div>;
+            }
+        }
+         else {
+            return false;
         }
     },
 });
