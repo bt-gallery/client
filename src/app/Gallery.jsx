@@ -9,7 +9,7 @@ const Gallery = React.createClass({
     elements: [],
     componentDidMount: function(){
         Store.addChangeListener(this._onChange);
-        PhotoAPIUtils.getPhotos(20,0);
+        PhotoAPIUtils.getPhotos(2,0);
     },
     componentWillUnmount: function() {
         Store.removeChangeListener(this._onChange);
@@ -20,15 +20,17 @@ const Gallery = React.createClass({
             elements:[],
             prevPageOffset:0,
             nextPageOffset:20,
+            total:0,
         }
     },
-    _onChange: function (prev, next) {
+    _onChange: function (prev, next, total) {
         let raw = Store.getAll();
         let builded = this.buildElements(raw);
         this.setState({
             elements: builded,
             prevPageOffset:prev,
             nextPageOffset:next,
+            total: total,
         });
     },
     buildElements: function(photos){
@@ -45,7 +47,7 @@ const Gallery = React.createClass({
                 <div className="masonry">
                     {this.state.elements}
                 </div>
-                <Pagination prevPageOffset={this.state.prevPageOffset} nextPageOffset={this.state.nextPageOffset}/>
+                <Pagination prevPageOffset={this.state.prevPageOffset} nextPageOffset={this.state.nextPageOffset} total={this.state.total}/>
             </div>;
         } else return false;
     },

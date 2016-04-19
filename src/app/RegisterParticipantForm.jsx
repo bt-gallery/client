@@ -116,11 +116,13 @@ const RegisterParticipantForm = React.createClass({
         .field('surname',surname)
         .field('patronymic',patronymic)
         .field('year',year)
+        .field('description',description)
+        .field('photoInfo', photoInfo)
         .end(function(err, res) {
           if (res && res.body && res.body.success) {
             Ee.methods.emit(
               'workBindingReady',
-              res.body.success.idParticipant,
+              res.body.success.id,
               sessionStorage.getItem('idDeclarant'),
               sessionStorage.getItem('idCompetitiveWork')
               );
@@ -143,7 +145,8 @@ const RegisterParticipantForm = React.createClass({
   handleSubmit: function() {
     this.setState({registerButtonDisabled:true});
     Superagent.put('/api/v1/register/')
-      .field('idDeclarant', sessionStorage.getItem('idDeclarant'))
+      .type('form')
+      .send({idDeclarant: sessionStorage.getItem('idDeclarant')})
       .end(function(err, res) {
         if (res && res.body && res.body.success) {
           Ee.methods.emit('betsMade');
