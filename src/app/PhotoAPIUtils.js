@@ -2,7 +2,6 @@ import Superagent from 'superagent';
 import Pagination from './Pagination';
 let EventEmitter = require('events').EventEmitter;
 
-
 let PhotoAPIUtils = {
 
     eventEmitter: EventEmitter.prototype,
@@ -11,7 +10,13 @@ let PhotoAPIUtils = {
         EventEmitter.prototype.on('recieve', callback);
     },
     removeRecieveListener: function(callback){
-        EventEmitter.prototype.removeListener('recieve', callback);
+        EventEmitter.prototype.removeListener('recieveInfo', callback);
+    },
+    addRecieveInfoListener: function(callback) {
+        EventEmitter.prototype.on('recieveInfo', callback);
+    },
+    removeRecieveInfoListener: function(callback){
+        EventEmitter.prototype.removeListener('recieveInfo', callback);
     },
 
     getPhotos: function(limit, offset) {
@@ -29,8 +34,8 @@ let PhotoAPIUtils = {
             });
     },
     getDetailInfo: function(photo_id) {
-
-        let info = {};/*
+        let info = {};
+        /*
         info.photo = {
             "id": "1",
             "time": "2016-04-14 18:33:49",
@@ -69,12 +74,14 @@ let PhotoAPIUtils = {
                         .end(function(error, result) {
                             if (result && result.body) {
                                 info.participant = result.body;
+                                console.log(info);
+                                PhotoAPIUtils.eventEmitter.emit('recieveInfo', info);
                             } //TODO обработать err
                         });
                 } //TODO обработать err
             });
         console.log(info);
-        return info;
+        return false;
     },
 };
 
