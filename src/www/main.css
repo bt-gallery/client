@@ -85,6 +85,7 @@ html {
 body {
   font-size: 13px;
   line-height: 20px;
+  position:relative;
 }
 
 #logo {
@@ -141,6 +142,7 @@ body {
   margin:auto;
   margin-top: 100px;
   width: 206px;
+  margin-bottom: 108px;
 }
 .info-block>div{
     width: 100%;
@@ -172,6 +174,9 @@ body {
     text-align: center;
     font-size: 30px;
     text-transform: uppercase;
+}
+.formBlock{
+    margin-bottom:300px;
 }
 
 /*  GO FULL WIDTH BELOW 480 PIXELS */
@@ -287,6 +292,23 @@ img{
 }
 .to-gallery{
     margin-bottom: 42px;
+}
+.banner{
+    width: 343px;
+    height: 81px;
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+}
+.partners{
+    float: left;
+    font-size: 15px;
+    margin-top: 27px;
+}
+.banner-wrap{
+    width: 222px;
+    height:81px;
+    float: left;
 }
 @media screen and (max-width: 680px) {
     .masonry {

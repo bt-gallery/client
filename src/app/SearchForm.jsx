@@ -84,7 +84,7 @@ const SearchForm = React.createClass({
           );
     }
     return (
-      <div>
+      <div className="formBlock">
         <div className="col tough span_1_of_2">
           <h2>Поиск по заявкам< /h2>
           <div>
