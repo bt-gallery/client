@@ -1,11 +1,10 @@
 import Ee from 'event-emitter';
 import Superagent from 'superagent';
 
-const bindCompetitiveWork = function(idParticipant, idDeclarant, idCompetitiveWork) {
-  Superagent.post('/api/v1/contributionSigned/bind')
-    .field('idParticipant',idParticipant)
-    .field('idDeclarant',idDeclarant)
-    .field('idContribution',idCompetitiveWork)
+const bindCompetitiveWork = function(idDeclarant, idCompetitiveWork) {
+  Superagent.put('/api/v1/bind')
+    .type('form')
+      .send({"idDeclarant": idDeclarant, "idContribution": idCompetitiveWork})
     .end(function(err, res) {
       if (res && res.body && res.body.success) {
         Ee.methods.emit('workBinded');
@@ -16,7 +15,6 @@ const bindCompetitiveWork = function(idParticipant, idDeclarant, idCompetitiveWo
     });
   console.log("binding");
   console.log(idCompetitiveWork);
-  console.log(idParticipant);
   console.log(idDeclarant);
 };
 

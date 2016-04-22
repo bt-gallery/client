@@ -36,7 +36,7 @@ const ImageZone = React.createClass({
     .end(function(err, res) {
       if (res && res.body && res.body.length && res.body[0].success) {
         sessionStorage.setItem(
-          'idCompetitiveWork', res.body[0].success.id
+          'idCompetitiveWork', res.body[0].success.idContribution
           );
         sessionStorage.setItem(
           'webPath', res.body[0].success.webPath

@@ -40,21 +40,14 @@ const add = {
     width: 173,
 }
 
-let name="";
-let surname="";
 let description="";
-let photoInfo="";
-let year="";
-let patronymic="";
+let persons="";
 
-let valid = false;
+let valid = true;
 
 const RegisterParticipantForm = React.createClass({
   getInitialState : function() {
     return {
-      nameErrorMessageText: "",
-      surnameErrorMessageText: "",
-      yearErrorMessageText: "",
       imageErrorMessageText:"",
       registerButtonDisabled:  true,
       addButtonDisabled: false,
@@ -73,40 +66,6 @@ const RegisterParticipantForm = React.createClass({
 
   handleAddParticipant: function() {
     this.setState({addButtonDisabled:true});
-    if (isNull(name)) {
-      valid = false;
-      this.setState({nameErrorMessageText:"Обязательно заполнить"});
-      this.setState({addButtonDisabled:false});
-      return;
-    } else {
-      valid = true;
-      this.setState({nameErrorMessageText:""});
-    }
-
-    if (isNull(surname)) {
-      valid = false;
-      this.setState({surnameErrorMessageText:"Обязательно заполнить"});
-      this.setState({addButtonDisabled:false});
-      return;
-    } else {
-      valid = true;
-      this.setState({surnameErrorMessageText:""});
-    }
-
-    if (isNull(year)) {
-      valid = false;
-      this.setState({yearErrorMessageText:"Обязательно заполнить"});
-      this.setState({addButtonDisabled:false});
-      return;
-    } else if (!isInt(year.trim(), {min:1800, max:1945})){
-      valid = false;
-      this.setState({yearErrorMessageText:"Вы ввели "+year+" год!"});
-      this.setState({addButtonDisabled:false});
-      return;
-    } else {
-      valid = true;
-      this.setState({yearErrorMessageText:""});
-    }
 
     if (sessionStorage.getItem('idCompetitiveWork') === '' || sessionStorage.getItem("idCompetitiveWork") === null) {
       this.setState({open:true, message:'Загрузите файл!'});
@@ -115,26 +74,23 @@ const RegisterParticipantForm = React.createClass({
 
     if (valid) {
       self = this;
-        Superagent.post('/api/v1/participant/add')
-        .field('idDeclarant', sessionStorage.getItem('idDeclarant'))
-        .field('name',name)
-        .field('surname',surname)
-        .field('patronymic',patronymic)
-        .field('year',year)
-        .field('description',description)
-        .field('idContribution', sessionStorage.getItem('idCompetitiveWork'))
-        .field('photoInfo', photoInfo)
+        Superagent.put('/api/v1/contribution/update')
+            .type('form')
+            .send({"idDeclarant": sessionStorage.getItem('idDeclarant'),
+              "description": description,
+              "persons": persons,
+              "idContribution": sessionStorage.getItem('idCompetitiveWork'),
+            })
         .end(function(err, res) {
           if (res && res.body && res.body.success) {
             Ee.methods.emit(
               'workBindingReady',
-              res.body.success.id,
               sessionStorage.getItem('idDeclarant'),
               sessionStorage.getItem('idCompetitiveWork')
               );
-            Ee.methods.emit('test', {name:name,surname:surname,webPath:sessionStorage.getItem('webPath')});
-            name = "";
-            surname = "";
+            Ee.methods.emit('test', {name:persons,webPath:sessionStorage.getItem('webPath')});
+            description = "";
+            persons = "";
             if (self.state.registerButtonDisabled) self.setState({registerButtonDisabled:false});
           } else {
             self.setState({open:true, message:'Ой! Ошибка.'});
@@ -165,25 +121,11 @@ const RegisterParticipantForm = React.createClass({
     browserHistory.push("/gallery");
   },
 
-  handleNameChange : function(event) {
-    name = event.target.value;
-  },
-
-  handleSurnameChange : function(event) {
-    surname = event.target.value;
-  },
-
-  handleYearChange : function(event) {
-    year = event.target.value;
-  },
   handleDescriptionChange : function(event) {
     description = event.target.value;
   },
-  handlePatronymicChange : function(event) {
-    patronymic = event.target.value;
-  },
-  handlePhotoInfoChange : function(event) {
-    photoInfo = event.target.value; //TODO Не предусмотрено API!
+  handlePersonsChange : function(event) {
+    persons = event.target.value;
   },
 
   onDrop: function(files) {
@@ -203,8 +145,8 @@ const RegisterParticipantForm = React.createClass({
   },
 
   onWorkBinded: function() {
-    name = "";
-    surname = "";
+    description = "";
+    persons = "";
     sessionStorage.removeItem('idCompetitiveWork');
     this.forceUpdate();
   },
@@ -229,6 +171,9 @@ const RegisterParticipantForm = React.createClass({
           <p>
             Давайте вместе соберем галерею фотопортретов фронтовиков и ветеранов тыла после их возвращения к обычной жизни. Присылайте снимки своих отцов и матерей, бабушек и дедушек, которые пережили войну и подарили мирную жизнь своим детям и внукам. Пусть их портреты станут напоминанием о том, как дорога каждому Победа, доставшаяся столь дорогой ценой.
           </p>
+          <p>
+            В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько , Вы также можете рассказать о них в описании.
+            </p>
           <div style={{margin:50}}>
             <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
               Как заполнять заявку
@@ -238,46 +183,18 @@ const RegisterParticipantForm = React.createClass({
         <div className="col span_1_of_3" style={styleBlock}>
           <div>
             <TextField
-                floatingLabelText="Фамилия*"
-                errorText={this.state.surnameErrorMessageText}
-                onChange={this.handleSurnameChange}
-                style={style}
-            / >
-            <br / >
-            <TextField
-              floatingLabelText="Имя*"
-              errorText={this.state.nameErrorMessageText}
-              onChange={this.handleNameChange}
-              name={name}
-              style={style}
-            / >
-            <br / >
-            <TextField
-              floatingLabelText="Отчество"
-              onChange={this.handlePatronymicChange}
-              style={style}
-            / >
-            <br / >
-            <TextField
-              floatingLabelText="Год рождения*"
-              errorText={this.state.yearErrorMessageText}
-              onChange={this.handleYearChange}
-              style={style}
-            / >
-            <br / >
-              <TextField
-              floatingLabelText="Информация о ветеране"
-              className="about"
-              onChange={this.handleDescriptionChange}
-              multiLine={true}
-              style={about}
+                floatingLabelText="Ветераны на фото"
+                multiLine={true}
+                onChange={this.handlePersonsChange}
+                className="about"
+                style={about}
             / >
             <br / >
               <TextField
               floatingLabelText="Информация о фото"
-              multiLine={true}
-              onChange={this.handlePhotoInfoChange}
               className="about"
+              onChange={this.handleDescriptionChange}
+              multiLine={true}
               style={about}
             / >
             <br / >
