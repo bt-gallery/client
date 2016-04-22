@@ -22,7 +22,7 @@ let PhotoAPIUtils = {
     getPhotos: function(limit, offset) {
         let raw;
 
-        Superagent.get('/api/v1/contributionSigned/getList/'+limit+'/'+offset)
+        Superagent.get('/api/v1/contribution/getList/'+limit+'/'+offset)
                .end(function(err, res) {
                 if (res && res.body && !res.body.error) {
                     raw = res.body.data;
@@ -39,14 +39,8 @@ let PhotoAPIUtils = {
         Superagent.get('/api/v1/contribution/get/'+photo_id)
             .end(function(err, res) {
                 if (res && res.body) {
-                    info.photo = res.body;
-                    Superagent.get('/api/v1/participant/get/'+info.photo.idParticipant)
-                        .end(function(error, result) {
-                            if (result && result.body) {
-                                info.participant = result.body;
-                                PhotoAPIUtils.eventEmitter.emit('recieveInfo', info);
-                            } //TODO обработать err
-                        });
+                    info = res.body;
+                    PhotoAPIUtils.eventEmitter.emit('recieveInfo', info);
                 } //TODO обработать err
             });
         return false;

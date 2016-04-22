@@ -25,12 +25,10 @@ const Detail = React.createClass({
         if (this.state.info) {
             return <div className="detail-wrapper">
                 <ToGalleryBtn />
-                <div className="image-wrapper"><img className="detail-image" src={this.state.info.photo.webPath}/></div>
+                <div className="image-wrapper"><img className="detail-image" src={this.state.info.webPath}/></div>
                 <div className="detail">
-                    <p className="full-name">{this.state.info.participant.surname} {this.state.info.participant.patronymic ? this.state.info.participant.patronymic : ''} {this.state.info.participant.name}</p>
-                    <p className="year">{this.state.info.participant.year} г.р.</p>
-                    <p className="story">{this.state.info.participant.description}</p>
-                    <p className="story">{this.state.info.photo.description}</p>
+                    <p className="full-name">{this.state.info.persons}</p>
+                    <p className="story">{this.state.info.description}</p>
                 </div>
             </div>;
         } else {

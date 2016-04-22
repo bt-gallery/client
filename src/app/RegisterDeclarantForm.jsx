@@ -100,8 +100,8 @@ const RegisterDeclarantForm = React.createClass({
         .set('Accept','application/json')
         .end(function(err, res) {
           if (res && res.body && res.body.success
-            && res.body.success.id ) {
-            sessionStorage.setItem('idDeclarant', res.body.success.id);
+            && res.body.success.idDeclarant ) {
+            sessionStorage.setItem('idDeclarant', res.body.success.idDeclarant);
             browserHistory.push("/participant");
           } else {
             self.setState({open:true, error:'Ой! Ошибка.'});

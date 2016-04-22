@@ -24,8 +24,7 @@ let Photo = React.createClass({
             <div className="item">
                     <img src={this.props.path}/>
                     <div className="tooltip">
-                        <span className="name">{this.props.surname} {this.props.name} {this.props.patronymic} {this.props.year} г.р.</span>
-                        <p className="description">{this.cutStr(this.props.info)}</p>
+                        <p className="description">{this.cutStr(this.props.name)}</p>
                     </div>
                 </div>
             </Link>;

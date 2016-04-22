@@ -286,7 +286,9 @@ img{
     text-indent: 8%;
 }
 .full-name, .year{
-    font-size:20px;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
 }
 .year{
     margin-top: 15px;

@@ -43,8 +43,7 @@ const ParticipantsList = React.createClass({
   updateListener : function(args) {
     tilesData.push({
       img:args.webPath,
-      name:args.name,
-      surname:args.surname,
+      name:args.persons,
     });
     this.setState({participants:tilesData.length});
   },
@@ -61,7 +60,6 @@ const ParticipantsList = React.createClass({
           <GridTile
             key={tile.img}
             title={tile.name}
-            subtitle={tile.surname}
           >
             <img src={tile.img} />
           < /GridTile>
@@ -79,7 +77,6 @@ const ParticipantsList = React.createClass({
             <GridTile
               key={tile.img}
               title={tile.name}
-              subtitle={tile.surname}
             >
               <img src={tile.img} />
             < /GridTile>
@@ -96,7 +93,6 @@ const ParticipantsList = React.createClass({
             <GridTile
               key={tile.img}
               title={tile.name}
-              subtitle={tile.surname}
             >
               <img src={tile.img} />
             < /GridTile>
