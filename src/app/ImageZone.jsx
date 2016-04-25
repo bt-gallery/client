@@ -42,6 +42,7 @@ const ImageZone = React.createClass({
           'webPath', res.body[0].success.webPath
           );
         self.props.toggleLoading();
+        Ee.methods.emit('fileUploaded');
       } else {
         self.setState({open:true, error:'Ой! Ошибка.'});
       }

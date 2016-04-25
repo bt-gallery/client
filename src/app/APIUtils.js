@@ -6,7 +6,7 @@ const bindCompetitiveWork = function(idDeclarant, idCompetitiveWork) {
     .type('form')
       .send({"idDeclarant": idDeclarant, "idContribution": idCompetitiveWork})
     .end(function(err, res) {
-      if (res && res.body && res.body.success) {
+      if (res && res.body && res.body[0]['success']) {
         Ee.methods.emit('workBinded');
         sessionStorage.removeItem('idCompetitiveWork');
       } else {

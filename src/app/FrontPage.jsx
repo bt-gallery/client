@@ -24,7 +24,13 @@ const FrontPage = React.createClass({
 
   componentDidMount: function() {
     sessionStorage.clear();
-    browserHistory.push("gallery");
+    if (this.props.routes) {
+      if (this.props.routes[1] && this.props.routes[1]['path'] === "/photo/:id") {
+        browserHistory.push("/photo/" + this.props.params.id);
+      } else {
+        browserHistory.push("gallery");
+      }
+    }
   },
 
   render : function render() {

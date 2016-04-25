@@ -40,8 +40,7 @@ const add = {
     width: 173,
 }
 
-let description="";
-let persons="";
+let self;
 
 let valid = true;
 
@@ -50,7 +49,7 @@ const RegisterParticipantForm = React.createClass({
     return {
       imageErrorMessageText:"",
       registerButtonDisabled:  true,
-      addButtonDisabled: false,
+      addButtonDisabled: true,
       dialogOpen:false,
       loading:false,
     };
@@ -58,15 +57,19 @@ const RegisterParticipantForm = React.createClass({
   componentDidMount: function() {
     APIUtils.init=true;
     Ee.methods.on('workBinded', this.onWorkBinded);
+    Ee.methods.on('fileUploaded',this.enableButton);
+
   },
 
   toggleLoading: function() {
     this.setState({loading: !this.state.loading});
   },
+  enableButton: function (){
+    this.setState({addButtonDisabled: false});
+  },
 
   handleAddParticipant: function() {
     this.setState({addButtonDisabled:true});
-
     if (sessionStorage.getItem('idCompetitiveWork') === '' || sessionStorage.getItem("idCompetitiveWork") === null) {
       this.setState({open:true, message:'Загрузите файл!'});
       valid = false;
@@ -77,8 +80,8 @@ const RegisterParticipantForm = React.createClass({
         Superagent.put('/api/v1/contribution/update')
             .type('form')
             .send({"idDeclarant": sessionStorage.getItem('idDeclarant'),
-              "description": description,
-              "persons": persons,
+              "description": self.state.description,
+              "persons": self.state.persons,
               "idContribution": sessionStorage.getItem('idCompetitiveWork'),
             })
         .end(function(err, res) {
@@ -88,9 +91,11 @@ const RegisterParticipantForm = React.createClass({
               sessionStorage.getItem('idDeclarant'),
               sessionStorage.getItem('idCompetitiveWork')
               );
-            Ee.methods.emit('test', {name:persons,webPath:sessionStorage.getItem('webPath')});
-            description = "";
-            persons = "";
+            Ee.methods.emit('test', {name:self.state.persons,webPath:sessionStorage.getItem('webPath')});
+            self.setState({
+              description:'',
+              persons:'',
+            });
             if (self.state.registerButtonDisabled) self.setState({registerButtonDisabled:false});
           } else {
             self.setState({open:true, message:'Ой! Ошибка.'});
@@ -99,7 +104,7 @@ const RegisterParticipantForm = React.createClass({
     } else {
       console.log("Unknown error");
     }
-    this.setState({addButtonDisabled:false});
+    this.setState({addButtonDisabled:true});
   },
 
   handleSubmit: function() {
@@ -122,10 +127,14 @@ const RegisterParticipantForm = React.createClass({
   },
 
   handleDescriptionChange : function(event) {
-    description = event.target.value;
+    this.setState({
+      description:event.target.value,
+    });
   },
   handlePersonsChange : function(event) {
-    persons = event.target.value;
+    this.setState({
+      persons:event.target.value,
+    });
   },
 
   onDrop: function(files) {
@@ -145,8 +154,10 @@ const RegisterParticipantForm = React.createClass({
   },
 
   onWorkBinded: function() {
-    description = "";
-    persons = "";
+    this.setState({
+      description:'',
+      persons:'',
+    });
     sessionStorage.removeItem('idCompetitiveWork');
     this.forceUpdate();
   },
@@ -183,18 +194,21 @@ const RegisterParticipantForm = React.createClass({
         <div className="col span_1_of_3" style={styleBlock}>
           <div>
             <TextField
-                floatingLabelText="Ветераны на фото"
+                floatingLabelText="ФИО ветерана(ов)"
                 multiLine={true}
                 onChange={this.handlePersonsChange}
+                value={this.state.persons}
                 className="about"
                 style={about}
             / >
             <br / >
               <TextField
-              floatingLabelText="Информация о фото"
+              floatingLabelText="Люди и события на фото"
               className="about"
+              rows={2}
               onChange={this.handleDescriptionChange}
               multiLine={true}
+              value={this.state.description}
               style={about}
             / >
             <br / >
