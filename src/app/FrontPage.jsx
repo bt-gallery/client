@@ -27,6 +27,12 @@ const FrontPage = React.createClass({
     if (this.props.routes) {
       if (this.props.routes[1] && this.props.routes[1]['path'] === "/photo/:id") {
         browserHistory.push("/photo/" + this.props.params.id);
+      } else if (this.props.routes[1] && this.props.routes[1]['path'] === "/declarant") {
+        browserHistory.push("/declarant");
+      } else if (this.props.routes[1] && this.props.routes[1]['path'] === "/search") {
+        browserHistory.push("/search");
+      } else if (this.props.routes[1] && this.props.routes[1]['path'] === "/participant") {
+        browserHistory.push("/declarant");
       } else {
         browserHistory.push("gallery");
       }
