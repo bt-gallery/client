@@ -6,6 +6,7 @@ import MediaQuery from 'react-responsive';
 
 const styles = {
   root: {
+    clear:'both',
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
@@ -43,9 +44,12 @@ const ParticipantsList = React.createClass({
   updateListener : function(args) {
     tilesData.push({
       img:args.webPath,
-      name:args.persons,
+      name:args.name,
     });
     this.setState({participants:tilesData.length});
+  },
+  componentWillUnmount: function() {
+    tilesData.length = 0;
   },
   render : function() {
     return (

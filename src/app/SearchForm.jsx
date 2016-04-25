@@ -119,7 +119,7 @@ const SearchForm = React.createClass({
             <tbody>{rows}< /tbody>
           < /table> :
           <div className={'info-block'}>
-            Если Вы не находите работы, проверьте адрес электронной почты.
+            Если Вы не находите фотографию, проверьте адрес электронной почты.
           < /div>
         }
           <br />

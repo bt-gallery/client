@@ -164,7 +164,8 @@ body {
 }
 
 .info-block-3{
-  font-size: 14px;
+  font-size: 17px;
+  line-height:25px;
   color: grey;
 }
 .register{
@@ -295,6 +296,9 @@ img{
 }
 .to-gallery{
     margin-bottom: 42px;
+}
+.upload {
+    position: relative;
 }
 .banner{
     width: 343px;

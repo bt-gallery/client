@@ -18,16 +18,21 @@ const style = {
   float: 'left',
 };
 
+const oneFoto = 'Вы можете отправить ее на регистрацию, нажав кнопку "Зарегистрировать", или добавить еще несколько фотографий.'
+const severalFotos = 'Вы можете отправить загруженные фото на регистрацию, нажав кнопку "Зарегистрировать", или добавить еще несколько.'
+
 const styleBlock = {
   display:"inline-flex",
   'paddingLeft':'30px',
 };
 const styleImageWaiting = {
+  display:'block',
   position: 'absolute',
+  left:87,
   width: 256,
   height: 256,
   paddingTop: 60,
-  zIndex:-1,
+  zIndex:10,
 };
 
 const about = {
@@ -36,12 +41,10 @@ const about = {
     },
 };
 const add = {
-    float: 'left',
     width: 173,
 }
 
-let description="";
-let persons="";
+let self;
 
 let valid = true;
 
@@ -50,23 +53,35 @@ const RegisterParticipantForm = React.createClass({
     return {
       imageErrorMessageText:"",
       registerButtonDisabled:  true,
-      addButtonDisabled: false,
+      addButtonDisabled: true,
       dialogOpen:false,
+      wellDone:false,
       loading:false,
+      fotos:0,
+      waiting:false,
     };
   },
   componentDidMount: function() {
     APIUtils.init=true;
     Ee.methods.on('workBinded', this.onWorkBinded);
+    Ee.methods.on('fileUploaded',this.enableButton);
+    Ee.methods.on('uploadStarted',this.showLoadWrap);
+
   },
 
-  toggleLoading: function() {
+  toggleLoading: function(){
     this.setState({loading: !this.state.loading});
+  },
+  enableButton: function (){
+    this.setState({addButtonDisabled: false, waiting:false});
+
+  },
+  showLoadWrap: function (){
+    this.setState({waiting:true});
   },
 
   handleAddParticipant: function() {
     this.setState({addButtonDisabled:true});
-
     if (sessionStorage.getItem('idCompetitiveWork') === '' || sessionStorage.getItem("idCompetitiveWork") === null) {
       this.setState({open:true, message:'Загрузите файл!'});
       valid = false;
@@ -77,8 +92,8 @@ const RegisterParticipantForm = React.createClass({
         Superagent.put('/api/v1/contribution/update')
             .type('form')
             .send({"idDeclarant": sessionStorage.getItem('idDeclarant'),
-              "description": description,
-              "persons": persons,
+              "description": self.state.description,
+              "persons": self.state.persons,
               "idContribution": sessionStorage.getItem('idCompetitiveWork'),
             })
         .end(function(err, res) {
@@ -88,9 +103,11 @@ const RegisterParticipantForm = React.createClass({
               sessionStorage.getItem('idDeclarant'),
               sessionStorage.getItem('idCompetitiveWork')
               );
-            Ee.methods.emit('test', {name:persons,webPath:sessionStorage.getItem('webPath')});
-            description = "";
-            persons = "";
+            Ee.methods.emit('test', {name:self.state.persons,webPath:sessionStorage.getItem('webPath')});
+            self.setState({
+              description:'',
+              persons:'',
+            });
             if (self.state.registerButtonDisabled) self.setState({registerButtonDisabled:false});
           } else {
             self.setState({open:true, message:'Ой! Ошибка.'});
@@ -99,7 +116,7 @@ const RegisterParticipantForm = React.createClass({
     } else {
       console.log("Unknown error");
     }
-    this.setState({addButtonDisabled:false});
+    this.setState({addButtonDisabled:true});
   },
 
   handleSubmit: function() {
@@ -122,10 +139,19 @@ const RegisterParticipantForm = React.createClass({
   },
 
   handleDescriptionChange : function(event) {
-    description = event.target.value;
+    this.setState({
+      description:event.target.value,
+    });
   },
   handlePersonsChange : function(event) {
-    persons = event.target.value;
+    this.setState({
+      persons:event.target.value,
+    });
+  },
+  handleCloseNotific :function() {
+    this.setState({
+      wellDone:false,
+    })
   },
 
   onDrop: function(files) {
@@ -145,10 +171,15 @@ const RegisterParticipantForm = React.createClass({
   },
 
   onWorkBinded: function() {
-    description = "";
-    persons = "";
+    let fotos = this.state.fotos+1;
+    this.setState({
+      description:'',
+      persons:'',
+      wellDone:true,
+      fotos:fotos,
+
+    });
     sessionStorage.removeItem('idCompetitiveWork');
-    this.forceUpdate();
   },
 
   render: function() {
@@ -157,6 +188,13 @@ const RegisterParticipantForm = React.createClass({
         label="Ок"
         primary={true}
         onTouchTap={this.handleCloseDialog}
+      />,
+    ];
+    const wellDoneActions = [
+      <FlatButton
+        label="Ок"
+        primary={true}
+        onTouchTap={this.handleCloseNotific}
       />,
     ];
     return (
@@ -172,7 +210,7 @@ const RegisterParticipantForm = React.createClass({
             Давайте вместе соберем галерею фотопортретов фронтовиков и ветеранов тыла после их возвращения к обычной жизни. Присылайте снимки своих отцов и матерей, бабушек и дедушек, которые пережили войну и подарили мирную жизнь своим детям и внукам. Пусть их портреты станут напоминанием о том, как дорога каждому Победа, доставшаяся столь дорогой ценой.
           </p>
           <p>
-            В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько , Вы также можете рассказать о них в описании.
+            В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько ветеранов, Вы также можете рассказать о них в описании.
             </p>
           <div style={{margin:50}}>
             <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
@@ -180,27 +218,30 @@ const RegisterParticipantForm = React.createClass({
             < /a>
           < /div>
         < /div>
-        <div className="col span_1_of_3" style={styleBlock}>
+        <div className="span_1_of_3" style={styleBlock}>
           <div>
             <TextField
-                floatingLabelText="Ветераны на фото"
+                floatingLabelText="ФИО ветерана(ов)"
                 multiLine={true}
                 onChange={this.handlePersonsChange}
+                value={this.state.persons}
                 className="about"
                 style={about}
             / >
             <br / >
               <TextField
-              floatingLabelText="Информация о фото"
+              floatingLabelText="Люди и события на фото"
               className="about"
+              rows={2}
               onChange={this.handleDescriptionChange}
               multiLine={true}
+              value={this.state.description}
               style={about}
             / >
             <br / >
             <br / >
               <div className="upload">
-            <div style={styleImageWaiting}>
+            <div style={this.state.waiting ? styleImageWaiting : {display:'none'}}>
             {this.state.loading ?
               <CircularProgress size={2} /> : null
             }
@@ -220,12 +261,13 @@ const RegisterParticipantForm = React.createClass({
               <div>
                 <CircularProgress />
               </ div> :
-              <FlatButton
+              <RaisedButton
                 disabled={this.state.registerButtonDisabled}
+                style={this.state.registerButtonDisabled ? {visibility:'hidden'} : {visibility:'visible'}}
                 label="Зарегистрировать"
-                secondary={true}
+                labelColor="#FFF"
+                backgroundColor="#4FCE7C"
                 onMouseDown={this.handleSubmit}
-                style={style}
               / >}
                   </div>
               {this.state.open ?
@@ -243,13 +285,23 @@ const RegisterParticipantForm = React.createClass({
               open={this.state.dialogOpen}
             >
               <div className="info-block-3">
-                Здравствуйте, Ваши фотографии приняты.
-                Благодарим Вас за участие в нашей акции. В ближайшее время фотографии пройдут модерацию и будут опубликованы в нашей галерее. После публикации Вы получите уведомление и ссылку на фотографию.
+                Ваши фотографии приняты!
+                Благодарим Вас за участие в нашей акции! В ближайшее время фотографии пройдут модерацию и будут опубликованы в нашей галерее. После публикации Вы получите уведомление и ссылку на фотографию.
+                < /div>
+            </Dialog>
+            <Dialog
+              title="Фотография добавлена!"
+              actions={wellDoneActions}
+              modal={true}
+              open={this.state.wellDone}
+            >
+              <div className="info-block-3">
+                {this.state.fotos> 1 ? severalFotos : oneFoto}
                 < /div>
             </Dialog>
           < /div>
         < /div>
-        <div className="col tough span_1_of_3">
+        <div>
           <ParticipantsList / >
         < /div>
       < /div>
