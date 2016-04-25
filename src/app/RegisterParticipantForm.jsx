@@ -263,11 +263,10 @@ const RegisterParticipantForm = React.createClass({
               </ div> :
               <RaisedButton
                 disabled={this.state.registerButtonDisabled}
-                style={this.state.registerButtonDisabled ? {visibility:'hidden'} : {visibility:'visible'}}
                 label="Зарегистрировать"
                 labelColor="#FFF"
                 backgroundColor="#4FCE7C"
-                onMouseDown={this.handleSubmit}
+                onClick={this.handleSubmit}
               / >}
                   </div>
               {this.state.open ?
