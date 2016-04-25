@@ -6,6 +6,7 @@ import MediaQuery from 'react-responsive';
 
 const styles = {
   root: {
+    clear:'both',
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',

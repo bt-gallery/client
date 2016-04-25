@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import Superagent from 'superagent';
 import Ee from 'event-emitter';
 
-const style = {width:254,height:254,border:"2px dashed lightgrey"};
+const style = {width:254,height:254,border:"2px dashed lightgrey", margin:'auto'};
 
 const infoStyle = {
   fontSize: 21,
@@ -30,6 +30,7 @@ const ImageZone = React.createClass({
 
   onDrop: function(files) {
     self = this;
+    Ee.methods.emit('uploadStarted');
     this.props.toggleLoading();
     Superagent.post('/api/v1/contribution/add/')
     .attach('image',files[0])

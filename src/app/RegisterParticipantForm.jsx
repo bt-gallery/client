@@ -18,16 +18,21 @@ const style = {
   float: 'left',
 };
 
+const oneFoto = 'Вы можете отправить ее на регистрацию, нажав кнопку "Зарегистрировать", или добавить еще несколько фотографий.'
+const severalFotos = 'Вы можете отправить загруженные фото на регистрацию, нажав кнопку "Зарегистрировать", или добавить еще несколько.'
+
 const styleBlock = {
   display:"inline-flex",
   'paddingLeft':'30px',
 };
 const styleImageWaiting = {
+  display:'block',
   position: 'absolute',
+  left:87,
   width: 256,
   height: 256,
   paddingTop: 60,
-  zIndex:-1,
+  zIndex:10,
 };
 
 const about = {
@@ -36,7 +41,6 @@ const about = {
     },
 };
 const add = {
-    float: 'left',
     width: 173,
 }
 
@@ -51,21 +55,29 @@ const RegisterParticipantForm = React.createClass({
       registerButtonDisabled:  true,
       addButtonDisabled: true,
       dialogOpen:false,
+      wellDone:false,
       loading:false,
+      fotos:0,
+      waiting:false,
     };
   },
   componentDidMount: function() {
     APIUtils.init=true;
     Ee.methods.on('workBinded', this.onWorkBinded);
     Ee.methods.on('fileUploaded',this.enableButton);
+    Ee.methods.on('uploadStarted',this.showLoadWrap);
 
   },
 
-  toggleLoading: function() {
+  toggleLoading: function(){
     this.setState({loading: !this.state.loading});
   },
   enableButton: function (){
-    this.setState({addButtonDisabled: false});
+    this.setState({addButtonDisabled: false, waiting:false});
+
+  },
+  showLoadWrap: function (){
+    this.setState({waiting:true});
   },
 
   handleAddParticipant: function() {
@@ -136,6 +148,11 @@ const RegisterParticipantForm = React.createClass({
       persons:event.target.value,
     });
   },
+  handleCloseNotific :function() {
+    this.setState({
+      wellDone:false,
+    })
+  },
 
   onDrop: function(files) {
     this.setState({
@@ -154,12 +171,15 @@ const RegisterParticipantForm = React.createClass({
   },
 
   onWorkBinded: function() {
+    let fotos = this.state.fotos+1;
     this.setState({
       description:'',
       persons:'',
+      wellDone:true,
+      fotos:fotos,
+
     });
     sessionStorage.removeItem('idCompetitiveWork');
-    this.forceUpdate();
   },
 
   render: function() {
@@ -168,6 +188,13 @@ const RegisterParticipantForm = React.createClass({
         label="Ок"
         primary={true}
         onTouchTap={this.handleCloseDialog}
+      />,
+    ];
+    const wellDoneActions = [
+      <FlatButton
+        label="Ок"
+        primary={true}
+        onTouchTap={this.handleCloseNotific}
       />,
     ];
     return (
@@ -183,7 +210,7 @@ const RegisterParticipantForm = React.createClass({
             Давайте вместе соберем галерею фотопортретов фронтовиков и ветеранов тыла после их возвращения к обычной жизни. Присылайте снимки своих отцов и матерей, бабушек и дедушек, которые пережили войну и подарили мирную жизнь своим детям и внукам. Пусть их портреты станут напоминанием о том, как дорога каждому Победа, доставшаяся столь дорогой ценой.
           </p>
           <p>
-            В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько , Вы также можете рассказать о них в описании.
+            В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько ветеранов, Вы также можете рассказать о них в описании.
             </p>
           <div style={{margin:50}}>
             <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
@@ -191,7 +218,7 @@ const RegisterParticipantForm = React.createClass({
             < /a>
           < /div>
         < /div>
-        <div className="col span_1_of_3" style={styleBlock}>
+        <div className="span_1_of_3" style={styleBlock}>
           <div>
             <TextField
                 floatingLabelText="ФИО ветерана(ов)"
@@ -214,7 +241,7 @@ const RegisterParticipantForm = React.createClass({
             <br / >
             <br / >
               <div className="upload">
-            <div style={styleImageWaiting}>
+            <div style={this.state.waiting ? styleImageWaiting : {display:'none'}}>
             {this.state.loading ?
               <CircularProgress size={2} /> : null
             }
@@ -234,12 +261,13 @@ const RegisterParticipantForm = React.createClass({
               <div>
                 <CircularProgress />
               </ div> :
-              <FlatButton
+              <RaisedButton
                 disabled={this.state.registerButtonDisabled}
+                style={this.state.registerButtonDisabled ? {visibility:'hidden'} : {visibility:'visible'}}
                 label="Зарегистрировать"
-                secondary={true}
+                labelColor="#FFF"
+                backgroundColor="#4FCE7C"
                 onMouseDown={this.handleSubmit}
-                style={style}
               / >}
                   </div>
               {this.state.open ?
@@ -257,13 +285,23 @@ const RegisterParticipantForm = React.createClass({
               open={this.state.dialogOpen}
             >
               <div className="info-block-3">
-                Здравствуйте, Ваши фотографии приняты.
-                Благодарим Вас за участие в нашей акции. В ближайшее время фотографии пройдут модерацию и будут опубликованы в нашей галерее. После публикации Вы получите уведомление и ссылку на фотографию.
+                Ваши фотографии приняты!
+                Благодарим Вас за участие в нашей акции! В ближайшее время фотографии пройдут модерацию и будут опубликованы в нашей галерее. После публикации Вы получите уведомление и ссылку на фотографию.
+                < /div>
+            </Dialog>
+            <Dialog
+              title="Фотография добавлена!"
+              actions={wellDoneActions}
+              modal={true}
+              open={this.state.wellDone}
+            >
+              <div className="info-block-3">
+                {this.state.fotos> 1 ? severalFotos : oneFoto}
                 < /div>
             </Dialog>
           < /div>
         < /div>
-        <div className="col tough span_1_of_3">
+        <div>
           <ParticipantsList / >
         < /div>
       < /div>
