@@ -59,6 +59,8 @@ const RegisterParticipantForm = React.createClass({
       loading:false,
       fotos:0,
       waiting:false,
+      uploadError:false,
+      uploadErrorText:'',
     };
   },
   componentDidMount: function() {
@@ -66,18 +68,26 @@ const RegisterParticipantForm = React.createClass({
     Ee.methods.on('workBinded', this.onWorkBinded);
     Ee.methods.on('fileUploaded',this.enableButton);
     Ee.methods.on('uploadStarted',this.showLoadWrap);
+    Ee.methods.on('uploadError',this.showUploadError);
 
   },
 
   toggleLoading: function(){
     this.setState({loading: !this.state.loading});
   },
-  enableButton: function (){
-    this.setState({addButtonDisabled: false, waiting:false});
+  enableButton: function (bool){
+    if (bool) {
+      this.setState({addButtonDisabled: false, waiting:false});
+    } else {
+      this.setState({addButtonDisabled: true, waiting:false});
+    }
 
   },
   showLoadWrap: function (){
     this.setState({waiting:true});
+  },
+  showUploadError: function (message){
+    this.setState({uploadErrorText:message, uploadError:true});
   },
 
   handleAddParticipant: function() {
@@ -153,6 +163,12 @@ const RegisterParticipantForm = React.createClass({
       wellDone:false,
     })
   },
+  handleCloseUploadError :function() {
+    this.setState({
+      uploadErrorText:'',
+      uploadError:false,
+    })
+  },
 
   onDrop: function(files) {
     this.setState({
@@ -197,6 +213,13 @@ const RegisterParticipantForm = React.createClass({
         onTouchTap={this.handleCloseNotific}
       />,
     ];
+    const uploadErrorClose = [
+      <FlatButton
+        label="Ок"
+        primary={true}
+        onTouchTap={this.handleCloseUploadError}
+      />,
+    ];
     return (
       <div className="section group">
         <div className="info-block-2 col tough span_1_of_3 paragraph_margined">
@@ -232,7 +255,7 @@ const RegisterParticipantForm = React.createClass({
               <TextField
               floatingLabelText="Люди и события на фото"
               className="about"
-              rows={2}
+              hintText="Кто еще на фото, год и обстоятельства съемки"
               onChange={this.handleDescriptionChange}
               multiLine={true}
               value={this.state.description}
@@ -296,6 +319,16 @@ const RegisterParticipantForm = React.createClass({
             >
               <div className="info-block-3">
                 {this.state.fotos> 1 ? severalFotos : oneFoto}
+                < /div>
+            </Dialog>
+            <Dialog
+              title="Ошибка!"
+              actions={uploadErrorClose}
+              modal={true}
+              open={this.state.uploadError}
+            >
+              <div className="info-block-3">
+                {this.state.uploadErrorText}
                 < /div>
             </Dialog>
           < /div>

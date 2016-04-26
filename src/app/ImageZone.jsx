@@ -29,7 +29,7 @@ const ImageZone = React.createClass({
   },
 
   onDrop: function(files) {
-    self = this;
+    let self = this;
     Ee.methods.emit('uploadStarted');
     this.props.toggleLoading();
     Superagent.post('/api/v1/contribution/add/')
@@ -43,13 +43,17 @@ const ImageZone = React.createClass({
           'webPath', res.body[0].success.webPath
           );
         self.props.toggleLoading();
-        Ee.methods.emit('fileUploaded');
+        Ee.methods.emit('fileUploaded', true);
+        self.setState({
+          files: files,
+        });
+      } else if (res && res.body && res.body.error) {
+        console.log(res.body.error.message);
+        Ee.methods.emit('fileUploaded', false);
+        Ee.methods.emit('uploadError', res.body.error.legend);
       } else {
         self.setState({open:true, error:'Ой! Ошибка.'});
       }
-    });
-    this.setState({
-      files: files,
     });
   },
 
