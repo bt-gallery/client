@@ -46,6 +46,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, 
 	display: block;
 }
 
+input::-ms-clear { display: none; }
+
 .wrapper {
 	width: 100%;
 	height: auto !important;
