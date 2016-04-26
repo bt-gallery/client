@@ -2,6 +2,7 @@ import React from 'react';
 import {browserHistory, Link} from 'react-router';
 import ToGalleryBtn from './ToGalleryBtn';
 import PhotoAPIUtils from './PhotoAPIUtils';
+import Share from './Share';
 
 const Detail = React.createClass({
     componentDidMount:function(){
@@ -29,6 +30,10 @@ const Detail = React.createClass({
                 <div className="detail">
                     <p className="full-name">{this.state.info.persons}</p>
                     <p className="story">{this.state.info.description}</p>
+                    <div className="share-block">
+                        <div className="share">Поделиться:</div>
+                        <Share image={this.state.info.thumbWebPath} persons={this.state.info.persons} description={this.state.info.description} contrID={this.props.params.id}/>
+                    </div>
                 </div>
             </div>;
         } else {

@@ -302,6 +302,13 @@ img{
 .upload {
     position: relative;
 }
+.share {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+.share-block {
+    margin-top: 40px;
+}
 .banner{
     width: 343px;
     height: 81px;
