@@ -22,9 +22,6 @@ const DashBoard = React.createClass({
           <div style={{margin:"auto",padding:5}}>
             Напоминаем вам, что каждый пользователь может проголосовать один раз в день в каждой из возрастных групп.
           < /div>
-          <div style={{margin:50}}>
-            <Link to={`/search`}>Поиск по заявкам< /Link>
-          < /div>
         < /div>
       < /div>
       );

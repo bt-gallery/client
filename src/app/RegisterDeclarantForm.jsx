@@ -199,12 +199,9 @@ const RegisterDeclarantForm = React.createClass({
         < /div>
         <div className="col tough span_2_of_2 info-block">
           <div>
-            <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
+            <a href={'https://www.youtube.com/watch?v=B1v6kKbi4iA&feature=youtu.be'} target={'_blank'} >
               Как заполнять заявку?
             < /a>
-            <br />
-            <br />
-            <Link to={`/search`}>Поиск по заявкам</Link>
           < /div>
         < /div>
       < /div>
