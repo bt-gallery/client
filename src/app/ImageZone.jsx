@@ -7,6 +7,7 @@ import Ee from 'event-emitter';
 const style = {width:254,height:254,border:"2px dashed lightgrey", margin:'auto'};
 
 const infoStyle = {
+  paddingTop: 95,
   fontSize: 21,
   color: 'grey',
   position: 'absolute',

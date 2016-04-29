@@ -6,6 +6,7 @@ import Snackbar from 'material-ui/lib/snackbar';
 import isNull from 'validator/lib/isNull';
 import isEmail from 'validator/lib/isEmail';
 import FlatButton from 'material-ui/lib/flat-button';
+import Photo from './Photo';
 
 const style = {
   marginLeft: 20,
@@ -26,27 +27,23 @@ const SearchForm = React.createClass({
   },
 
   handleSubmit : function() {
-    self = this;
+    let self = this;
     if (isNull(search)) {
-      this.setState({searchErrorMessageText:"Введите корректный адрес электронной почты"});
-      return;
-    }
-    if (!isEmail(search)) {
-      this.setState({searchErrorMessageText:"Некорректный адрес электронной почты"});
+      this.setState({searchErrorMessageText:"Заполните это поле"});
       return;
     }
     this.setState({sending:true});
-    Superagent.get('/api/v1/search/bymail')
+    Superagent.get('/api/v1/search/bysurname')
       .query({q:search})
       .end(function(err, res) {
         if (!err && err == null) {
           console.log(res);
-          if (res.body.length) {
+          if (res.body.data && res.body.meta) {
             console.log('setting party');
-            self.setState({participantList:res.body});
+            self.setState({participantList:res.body.data});
           } else {
             console.log('show message');
-            self.setState({snackBarOpen:true,snackBarMessage:'Ничего не нашли. Можно зарегистрироваться еще раз.'});
+            self.setState({snackBarOpen:true,snackBarMessage:'К сожалению, ничего не найдено.'});
           }
           self.setState({sending:false});
           console.log('finishing roll');
@@ -70,26 +67,16 @@ const SearchForm = React.createClass({
     rows = [];
     for (let i=0; i < this.state.participantList.length; i++) {
       rows.push(
-        <tr key={i} >
-          <td>{this.state.participantList[i].name} {this.state.participantList[i].surname}< /td>
-          <td>{this.state.participantList[i].queue_num}< /td>
-          <td>{this.state.participantList[i].result}< /td>
-          <td>{this.state.participantList[i].notice}< /td>
-          <td>
-            <a href={this.state.participantList[i].web_url} target={'_blank'}>
-              <img src={this.state.participantList[i].web_url} style={{maxWidth:100, maxHeight:100}} />
-            </a>
-          < /td>
-        < /tr>
+            <Photo key={this.state.participantList[i].idContribution} id={this.state.participantList[i].idContribution} path={'http://foto1945.mir24.tv'+this.state.participantList[i].thumbWebPath} name={this.state.participantList[i].persons}/>
           );
     }
     return (
       <div className="formBlock">
-        <div className="col tough span_1_of_2">
-          <h2>Поиск по заявкам< /h2>
+        <div>
+          <h2>Поиск ветерана< /h2>
           <div>
             <TextField
-              floatingLabelText="Введите электронную почту"
+              floatingLabelText="Введите фамилию ветерана"
               errorText={this.state.searchErrorMessageText}
               onChange={this.handleSearchChange}
               style={style}
@@ -110,16 +97,14 @@ const SearchForm = React.createClass({
             onRequestClose={this.handleRequestClose}
           />
         < /div>
-        <div className="col tough span_2_of_2">
+        <div>
         {this.state.sending ?
           <CircularProgress style={{marginLeft:5, position:"absolute"}} /> : null
           }
         {this.state.participantList.length ?
-          <table>
-            <tbody>{rows}< /tbody>
-          < /table> :
-          <div className={'info-block'}>
-            Если Вы не находите фотографию, проверьте адрес электронной почты.
+            <div className="masonry">{rows}< /div>:
+          <div className='info-block searchtip'>
+            Если Вы не находите фотографию, проверьте правильность написания фамилии.
           < /div>
         }
           <br />
