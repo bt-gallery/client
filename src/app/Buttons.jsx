@@ -11,7 +11,7 @@ const Buttons = React.createClass({
         browserHistory.push("/declarant");
     },
     render: function() {
-        return <div>
+        return <div className="searchNadd">
             <RaisedButton label="Найти ветерана" labelColor="#FFF" style={{marginRight:10}}  backgroundColor='#86C5F3' onClick={this.handleFindClick}/>
             <RaisedButton label="Добавить фото из личного архива" labelColor="#FFF"  backgroundColor='#D66E6E' onClick={this.handleAddClick}/>
         </div>;
