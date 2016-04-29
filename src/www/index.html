@@ -9,10 +9,17 @@
 
   <!-- Use minimum-scale=1 to enable GPU rasterization -->
   <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1, minimum-scale=1"
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=0, maximum-scale=1, minimum-scale=1"
   >
-  <link rel="stylesheet" type="text/css" href="/main.css?3245">
+  <meta property="fb:app_id" content="1158653494156812" />
+  <meta property="og:title" content="Мир без войны"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="http://foto1945.mir24.tv/?ext"/>
+  <meta property="og:image" content="/share.jpg"/>
+  <meta property="og:site_name" content="Мир без войны"/>
+  <meta property="og:description" content='"Мир без войны" - скажи спасибо ветеранам, поделись их счастливыми лицами  на фотографиях и послевоенными историями.'/>
+  <link rel="stylesheet" type="text/css" href="/main.css?1917">
   <link rel="stylesheet" type="text/css" href="/table.css">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <script src="https://yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
@@ -22,38 +29,42 @@
 <body>
 <div class="banner">
   <div class="partners">Партнеры акции:</div>
-  <div class="banner-wrap"><img src="/akado.jpg"/></div>
+  <div class="banner-wrap"><img class="mrc__share_ignore" src="/akado.jpg"/></div>
 </div>
-  <div class="wrapper">
-    <header class="header">
-      <div id="logo">
-        <a href="/">
-          <img src="http://mir24.tv/media/images/mir2/mir_logo_80.png" alt="24 МИР" title="24 МИР">
-        </a>
-      </div>
-      <p class="page-title">Мир без войны</p>
-    </header>
-    <main class="content">
-      <div id="app"></div>
-    </main>
+<div class="wrapper">
+  <header class="header">
+    <div id="logo">
+      <a href="/">
+        <img class="mrc__share_ignore" src="http://mir24.tv/media/images/mir2/mir_logo_80.png" alt="24 МИР" title="24 МИР">
+      </a>
+    </div>
+    <div class="share-container">
+      <div class="ya-share2 header-share" data-url="http://foto1945.mir24.tv/?ext" data-services="vkontakte,facebook,odnoklassniki" data-image="/share.jpg" data-description='"Мир без войны" - скажи спасибо ветеранам, поделись их счастливыми лицами  на фотографиях и послевоенными историями.'></div>
+      <div class="spreadTheWord">Рассказать о проекте</div>
+    </div>
+    <p class="page-title">Мир без войны</p>
+  </header>
+  <main class="content">
+    <div id="app"></div>
+  </main>
 
-  </div><!-- .wrapper -->
-  <!-- This script adds the Roboto font to our project. For more detail go to this site:  http://www.google.com/fonts#UsePlace:use/Collection:Roboto:400,300,500 -->
-  <script>
-    var WebFontConfig = {
-      google: { families: [ 'Roboto:400,300,500:latin' ] }
-    };
-    (function() {
-      var wf = document.createElement('script');
-      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-      wf.type = 'text/javascript';
-      wf.async = 'true';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(wf, s);
-    })();
-  </script>
-  <script src="/app.js"></script>
+</div><!-- .wrapper -->
+<!-- This script adds the Roboto font to our project. For more detail go to this site:  http://www.google.com/fonts#UsePlace:use/Collection:Roboto:400,300,500 -->
+<script>
+  var WebFontConfig = {
+    google: { families: [ 'Roboto:400,300,500:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+<script src="/app.js"></script>
 </body>
 
 </html>

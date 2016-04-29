@@ -52,6 +52,8 @@ const RegisterParticipantForm = React.createClass({
   getInitialState : function() {
     return {
       imageErrorMessageText:"",
+      personsErrorMessageText:"",
+      descriptionErrorMessageText:"",
       registerButtonDisabled:  true,
       addButtonDisabled: true,
       dialogOpen:false,
@@ -91,14 +93,32 @@ const RegisterParticipantForm = React.createClass({
   },
 
   handleAddParticipant: function() {
-    this.setState({addButtonDisabled:true});
     if (sessionStorage.getItem('idCompetitiveWork') === '' || sessionStorage.getItem("idCompetitiveWork") === null) {
       this.setState({open:true, message:'Загрузите файл!'});
       valid = false;
     }
 
+    if (!this.state.persons) {
+      valid = false;
+      this.setState({personsErrorMessageText: "Обязательно заполнить"});
+      return;
+    } else {
+      valid = true;
+      this.setState({personsErrorMessageText: ""});
+    }
+
+    if (!this.state.description) {
+      valid = false;
+      this.setState({descriptionErrorMessageText: "Обязательно заполнить"});
+      return;
+    } else {
+      valid = true;
+      this.setState({descriptionErrorMessageText: ""});
+    }
+
     if (valid) {
       self = this;
+      this.setState({addButtonDisabled:true});
         Superagent.put('/api/v1/contribution/update')
             .type('form')
             .send({"idDeclarant": sessionStorage.getItem('idDeclarant'),
@@ -121,12 +141,12 @@ const RegisterParticipantForm = React.createClass({
             if (self.state.registerButtonDisabled) self.setState({registerButtonDisabled:false});
           } else {
             self.setState({open:true, message:'Ой! Ошибка.'});
+	    self.setState({addButtonDisabled:false});
           }
         });
     } else {
       console.log("Unknown error");
     }
-    this.setState({addButtonDisabled:true});
   },
 
   handleSubmit: function() {
@@ -236,7 +256,7 @@ const RegisterParticipantForm = React.createClass({
             В описании к фото Вы можете рассказать о жизненном пути этих людей и о событии, запечатленном на снимке. Если на фотографии несколько ветеранов, Вы также можете рассказать о них в описании.
             </p>
           <div style={{margin:50}}>
-            <a href={'https://www.youtube.com/watch?v=SYVUmVBgRBw&feature=youtu.be'} target={'_blank'} >
+            <a href={'https://www.youtube.com/watch?v=B1v6kKbi4iA&feature=youtu.be'} target={'_blank'} >
               Как заполнять заявку
             < /a>
           < /div>
@@ -244,7 +264,8 @@ const RegisterParticipantForm = React.createClass({
         <div className="span_1_of_3" style={styleBlock}>
           <div>
             <TextField
-                floatingLabelText="ФИО ветерана(ов)"
+                floatingLabelText="*ФИО ветерана(ов)"
+		errorText={this.state.personsErrorMessageText}
                 multiLine={true}
                 onChange={this.handlePersonsChange}
                 value={this.state.persons}
@@ -253,7 +274,8 @@ const RegisterParticipantForm = React.createClass({
             / >
             <br / >
               <TextField
-              floatingLabelText="Люди и события на фото"
+              floatingLabelText="*Люди и события на фото"
+	      errorText={this.state.descriptionErrorMessageText}
               className="about"
               hintText="Кто еще на фото, год и обстоятельства съемки"
               onChange={this.handleDescriptionChange}
