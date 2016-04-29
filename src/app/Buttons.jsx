@@ -12,8 +12,8 @@ const Buttons = React.createClass({
     },
     render: function() {
         return <div>
-            <RaisedButton label="Найти ветерана" labelColor="#FFF" style={{marginRight:10}}  backgroundColor='#82AFD0' onClick={this.handleFindClick}/>
-            <RaisedButton label="Добавить фото из личного архива" labelColor="#FFF"  backgroundColor='#A20000' onClick={this.handleAddClick}/>
+            <RaisedButton label="Найти ветерана" labelColor="#FFF" style={{marginRight:10}}  backgroundColor='#86C5F3' onClick={this.handleFindClick}/>
+            <RaisedButton label="Добавить фото из личного архива" labelColor="#FFF"  backgroundColor='#D66E6E' onClick={this.handleAddClick}/>
         </div>;
     },
 });

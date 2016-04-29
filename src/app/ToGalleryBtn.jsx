@@ -9,7 +9,7 @@ const ToGalleryBtn = React.createClass({
     },
     render: function() {
         return <div className="to-gallery">
-            <RaisedButton label="Вернуться в галерею" primary={true} onClick={this.handleClick}/>
+            <RaisedButton label="Вернуться в галерею" labelColor="#FFF" backgroundColor='#86C5F3' onClick={this.handleClick}/>
         </div>;
     },
 });

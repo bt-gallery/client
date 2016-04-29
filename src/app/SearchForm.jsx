@@ -12,12 +12,12 @@ const style = {
   marginLeft: 20,
 };
 
-let search="";
 let rows=[];
 
 const SearchForm = React.createClass({
   getInitialState : function() {
     return {
+      search:'',
       sending:false,
       searchErrorMessageText:"",
       snackBarMessage:"",
@@ -28,13 +28,13 @@ const SearchForm = React.createClass({
 
   handleSubmit : function() {
     let self = this;
-    if (isNull(search)) {
+    if (isNull(this.state.search)) {
       this.setState({searchErrorMessageText:"Заполните это поле"});
       return;
     }
     this.setState({sending:true});
     Superagent.get('/api/v1/search/bysurname')
-      .query({q:search})
+      .query({q:self.state.search})
       .end(function(err, res) {
         if (!err && err == null) {
           console.log(res);
@@ -43,7 +43,8 @@ const SearchForm = React.createClass({
             self.setState({participantList:res.body.data});
           } else {
             console.log('show message');
-            self.setState({snackBarOpen:true,snackBarMessage:'К сожалению, ничего не найдено.'});
+            self.setState({snackBarOpen:true,snackBarMessage:'К сожалению, ничего не найдено.', search:'', participantList:[]});
+
           }
           self.setState({sending:false});
           console.log('finishing roll');
@@ -56,7 +57,9 @@ const SearchForm = React.createClass({
   },
 
   handleSearchChange : function(event) {
-    search = event.target.value;
+    this.setState({
+      search: event.target.value,
+    });
   },
 
   handleRequestClose : function() {
@@ -73,12 +76,13 @@ const SearchForm = React.createClass({
     return (
       <div className="formBlock">
         <div>
-          <h2>Поиск ветерана< /h2>
+          <h2>Поиск по фамилии< /h2>
           <div>
             <TextField
               floatingLabelText="Введите фамилию ветерана"
               errorText={this.state.searchErrorMessageText}
               onChange={this.handleSearchChange}
+              value={this.state.search}
               style={style}
             / >
           </div>
