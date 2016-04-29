@@ -26,7 +26,7 @@ let PhotoAPIUtils = {
                .end(function(err, res) {
                 if (res && res.body && !res.body.error) {
                     raw = res.body.data;
-                    let total=res.body.meta.total;
+                    let total=res.body.meta;
                     PhotoAPIUtils.eventEmitter.emit('recieve', raw, limit, offset, total);
                 } else if (res.body.error){
                     console.log(res.body.error['message']+' | '+res.body.error['legend']);

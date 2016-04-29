@@ -89,7 +89,7 @@ const RegisterDeclarantForm = React.createClass({
     }
 
     if (valid) {
-      self = this;
+      let self = this;
       this.setState({sending:true});
       Superagent.post('/api/v1/declarant/add')
         .field('email',email)

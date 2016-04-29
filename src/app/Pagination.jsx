@@ -23,16 +23,16 @@ const Pagination = React.createClass({
         if (this.props.total>20) {
             if (this.props.prevPageOffset>=0 && this.props.nextPageOffset<this.props.total) {
                 return <div>
-                    <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick} style={{marginRight:10}}/>
-                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
+                    <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#D66E6E' onClick={this.handleBackClick} style={{marginRight:10}}/>
+                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#D66E6E' onClick={this.handleNextClick}/>
                 </div>;
             } else if (this.props.prevPageOffset>=0 && this.props.nextPageOffset>=this.props.total){
                return <div>
-                   <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleBackClick}/>
+                   <RaisedButton label="Предыдущая" labelColor="#FFF" backgroundColor='#D66E6E' onClick={this.handleBackClick}/>
                 </div>;
             } else if (this.props.prevPageOffset<0 && this.props.nextPageOffset<this.props.total){
                 return <div>
-                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#A20000' onClick={this.handleNextClick}/>
+                    <RaisedButton label="Следующая" labelColor="#FFF" backgroundColor='#D66E6E' onClick={this.handleNextClick}/>
                 </div>;
             }
         }
